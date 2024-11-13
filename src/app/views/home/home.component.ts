@@ -54,6 +54,18 @@ export class HomeComponent implements AfterViewInit {
   #dialog: MatDialog = inject(MatDialog);
   #snackBar: MatSnackBar = inject(MatSnackBar);
   @ViewChild(MatSort) sort!: MatSort;
+  isAdmin: boolean = false;
+
+  constructor() {
+    const adminAddresses = ['0xc09CD05e58aB5Bd8862DEe3f44e6ddAd5567F091']
+    const walletAddress = sessionStorage.getItem('wallet-address');
+    console.log(walletAddress)
+    if(walletAddress) {
+      this.isAdmin = adminAddresses
+        .map(address => address.toLowerCase())
+        .includes(walletAddress.toLowerCase());
+    }
+  }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
