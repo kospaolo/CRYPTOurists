@@ -55,6 +55,7 @@ export class NavbarComponent implements OnInit {
     sessionStorage.setItem('wallet-address', this.walletAddress);
     this.walletConnected = true;
     this.#toastrService.success('Wallet address connected!', 'Success');
+    window.location.reload();
   }
 
   disconnectWallet() {
@@ -62,6 +63,7 @@ export class NavbarComponent implements OnInit {
     this.walletAddress = null;
     sessionStorage.removeItem('wallet-address');
     this.#toastrService.success('Wallet address disconnected!', 'Success');
+    window.location.reload();
   }
 
   copyWalletAddress() {

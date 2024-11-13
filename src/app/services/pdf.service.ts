@@ -12,6 +12,8 @@ import { ethers } from 'ethers';
 export class PinataService {
   private apiKey = 'YOUR_API_KEY';
   private apiSecret = 'YOUR_API_SECRET';
+  PINATA_API_KEY = 'YOUR_API_KEY';
+  PINATA_SECRET_KEY = 'YOUR_API_KEY';
 
   private contractAddress = 'YOUR_CONTRACT_ADDRESS'; // After deployment
   private contractABI = [

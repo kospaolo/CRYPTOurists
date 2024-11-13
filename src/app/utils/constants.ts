@@ -8,5 +8,5 @@ export const businessAddresses = [
 ];
 
 export const adminAddresses = [
-  '0xc09CD05e58aB5Bd8862DEe3f44e6ddAd5567F091',
+  '0xc09CD05e58aB5Bd8862DEe3f44e6ddAd5567F091'
 ];

@@ -125,3 +125,11 @@
   background-color: #f0f0f0;
   color: black;
 }
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}

@@ -31,9 +31,13 @@ export class BookingService {
 
   async createBooking(customerAddress: any, articles: any): Promise<any> {
     try {
+      this.#web3 = new Web3((window as any).ethereum);
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
-      const result = await contract.methods['createBooking'](articles, customerAddress);
+      const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
 
+      const result = await contract.methods
+        ['createBooking'](articles, customerAddress)
+        .send({ from: accounts[0] });
       console.log('Booking created successfully:', result);
     } catch (error) {
       console.error('Error creating article:', error);
@@ -47,6 +51,28 @@ export class BookingService {
       return await contract.methods['getBookingArticles'](bookingId).call();
     } catch (error) {
       console.error('Error fetching bookingArticles:', error);
+      throw error;
+    }
+  }
+
+  async payBooking(booking: any): Promise<any> {
+    try {
+      this.#web3 = new Web3((window as any).ethereum);
+      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      return await contract.methods['completePayment'](booking.id).call();
+    } catch (error) {
+      console.error('Error accepting booking:', error);
+      throw error;
+    }
+  }
+
+  async refundPayment(booking: any): Promise<any> {
+    try {
+      this.#web3 = new Web3((window as any).ethereum);
+      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      return await contract.methods['refundPayment'](booking.id).call();
+    } catch (error) {
+      console.error('Error refunding booking:', error);
       throw error;
     }
   }

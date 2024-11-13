@@ -54,18 +54,33 @@ export class ArticleService {
 
   async createArticle(name: any, business: any, price: any): Promise<void> {
     try {
-      // Request the user's account (wallet address) from Web3
-      const accounts = await this.#web3.eth.requestAccounts();
-      const account = accounts[0]; // Use the first account available
+      this.#web3 = new Web3((window as any).ethereum);
 
-      // Convert price to the correct format if needed (e.g., converting to Wei if price represents Ether)
+      // Request the user's account (wallet address) from Web3
+      const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+      console.log("Using account:", accounts[0]);
+
+      // Convert price to Wei format
       const formattedPrice: any = this.#web3.utils.toWei(price.toString(), 'ether');
 
-      // Call the smart contract's createArticle function
+      // Log values to check for correctness
+      console.log("Article details:", { name, business, formattedPrice });
+
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
-      const result = await contract.methods['createArticle'](name, business, formattedPrice).send({
-        from: account,
-      });
+
+      // Estimate gas and adjust if needed
+      const gasEstimate = await contract.methods['createArticle'](name, business, formattedPrice).estimateGas({ from: accounts[0] });
+      console.log("Estimated Gas:", gasEstimate);
+
+      // Test the function with call to check for any revert
+      const testCall = await contract.methods['createArticle'](name, business, formattedPrice).call({ from: accounts[0] });
+      console.log("Test call successful:", testCall);
+
+      const gasLimit = 3000000;
+
+      // Send the transaction
+      const result = await contract.methods['createArticle'](name, business, formattedPrice)
+        .send({ from: accounts[0], gas: gasLimit.toString() });
 
       console.log('Article created successfully:', result);
     } catch (error) {
@@ -73,4 +88,5 @@ export class ArticleService {
       throw error;
     }
   }
+
 }

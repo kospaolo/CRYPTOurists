@@ -13,7 +13,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
-import {CurrencyPipe, SlicePipe} from '@angular/common';
+import {CurrencyPipe, NgIf, SlicePipe} from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { ArticleDetailsModalComponent } from '../../components/articles/article-details-modal/article-details-modal.component';
 import { ArticleService } from '../../services/article.service';
@@ -22,6 +22,7 @@ import { CreateArticleModalComponent } from '../../components/articles/create-ar
 import {adminAddresses, businessAddresses} from '../../utils/constants';
 import {Web3} from 'web3';
 import {PinataService} from '../../services/pdf.service';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-articles',
@@ -44,7 +45,9 @@ import {PinataService} from '../../services/pdf.service';
     MatSortModule,
     CurrencyPipe,
     MatPaginator,
-    SlicePipe
+    SlicePipe,
+    NgIf,
+    MatProgressSpinner
   ],
   providers: [PinataService],
   templateUrl: './articles.component.html',
@@ -72,9 +75,10 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
     description: 'DESC',
     date: new Date().toISOString().split('T')[0]
   };
-  isUploading = false;
-  status = '';
+  status: string  = '';
   ipfsUrl: string = '';
+  isUploading: boolean = false;
+  loading: boolean     = true;
 
   constructor() {
     if(this.walletAddress) {
@@ -93,6 +97,7 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
   }
 
   async fetchArticles() {
+    this.loading = true;
     const rawData = await this.#articleService.getAllArticles();
     const articles = this.transformData(rawData) || [];
 
@@ -101,6 +106,7 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
     } else {
       this.dataSource.data = articles.filter(article => article.active);
     }
+    this.loading = false;
   }
 
   ngAfterViewInit() {

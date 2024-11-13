@@ -13,11 +13,13 @@ import { BookingDetailsModalComponent } from '../../components/bookings/booking-
 import {NgClass, SlicePipe, CurrencyPipe, DatePipe, DecimalPipe, NgIf} from '@angular/common';
 import {adminAddresses, businessAddresses} from '../../utils/constants';
 import {Web3} from 'web3';
-import {MatButton} from '@angular/material/button';
+import {MatButton, MatIconButton} from '@angular/material/button';
 import {CreateArticleModalComponent} from '../../components/articles/create-article-modal/create-article-modal.component';
 import {
   CreateBookingModalComponent
 } from '../../components/bookings/create-booking-modal/create-booking-modal.component';
+import {MatIcon} from '@angular/material/icon';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-home',
@@ -40,7 +42,10 @@ import {
     MatRowDef,
     DecimalPipe,
     NgIf,
-    MatButton
+    MatButton,
+    MatIcon,
+    MatIconButton,
+    MatProgressSpinner
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -50,11 +55,13 @@ export class HomeComponent implements OnInit {
   #bookingService: BookingService = inject(BookingService);
 
   bookings: any[] = [];
-  displayedColumns: string[] = ['id', 'amount', 'operatorFee', 'timestamp', 'customer', 'status'];
+  displayedColumns: string[] = ['id', 'amount', 'operatorFee', 'timestamp', 'customer', 'status', 'actions'];
   walletAddress: string | null = sessionStorage.getItem('wallet-address');ž
 
   isAdmin: boolean    = false;
   isBusiness: boolean = false;
+  connected: boolean  = false;
+  loading: boolean    = true;
 
   async ngOnInit() {
     this.checkIfBusiness();
@@ -63,6 +70,7 @@ export class HomeComponent implements OnInit {
 
   checkIfBusiness() {
     if (this.walletAddress) {
+      this.connected = true;
       this.isAdmin = adminAddresses
         .map(address => address.toLowerCase())
         .includes(this.walletAddress.toLowerCase());
@@ -75,6 +83,7 @@ export class HomeComponent implements OnInit {
 
   // Fetch bookings and apply business filtering if necessary
   async fetchBookings() {
+    this.loading = true;
     try {
       const rawData = await this.#bookingService.getAllBookings();
       const allBookings = this.transformData(rawData);
@@ -84,6 +93,7 @@ export class HomeComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching bookings:', error);
     }
+    this.loading = false;
   }
 
   transformData(rawData: any) {
@@ -131,5 +141,23 @@ export class HomeComponent implements OnInit {
         await this.fetchBookings();
       }
     });
+  }
+
+  async payBooking(booking: any): Promise<void> {
+    try {
+      await this.#bookingService.payBooking(booking);
+      console.log('Booking accepted successfully');
+    } catch (error) {
+      console.error('Error creating article:', error);
+    }
+  }
+
+  async refundBooking(booking: any): Promise<void> {
+    try {
+      await this.#bookingService.refundPayment(booking);
+      console.log('Booking refunded successfully');
+    } catch (error) {
+      console.error('Error creating article:', error);
+    }
   }
 }

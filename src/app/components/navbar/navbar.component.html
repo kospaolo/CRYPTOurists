@@ -9,10 +9,12 @@
   }
 
   @if(walletConnected) {
-    <button mat-raised-button color="accent" class="articles-button me-4" [routerLink]="'/articles'">
-      <mat-icon>library_books</mat-icon>
-      <span>Articles</span>
-    </button>
+    @if(isAdmin || isBusiness) {
+      <button mat-raised-button color="accent" class="articles-button me-4" [routerLink]="'/articles'">
+        <mat-icon>library_books</mat-icon>
+        <span>Articles</span>
+      </button>
+    }
     <div class="wallet-info">
       <span class="wallet-address" (click)="copyWalletAddress()">{{ walletAddress | slice:0:6 }}...{{ walletAddress | slice:-4 }}</span>
       <button mat-icon-button [matMenuTriggerFor]="walletMenu">
