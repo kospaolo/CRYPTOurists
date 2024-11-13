@@ -1,0 +1,23 @@
+<mat-toolbar color="primary" class="navbar">
+  <span class="title">CRYPTOurists</span>
+  <span class="spacer"></span>
+
+  @if(!walletConnected) {
+    <button mat-raised-button color="accent" (click)="connectWallet()">
+      Connect Wallet
+    </button>
+  }
+
+  @if(walletConnected) {
+    <div class="wallet-info">
+      <span class="wallet-address">{{ walletAddress | slice:0:6 }}...{{ walletAddress | slice:-4 }}</span>
+      <button mat-icon-button [matMenuTriggerFor]="walletMenu">
+        <mat-icon>account_balance_wallet</mat-icon>
+      </button>
+      <mat-menu #walletMenu="matMenu">
+        <button mat-menu-item (click)="copyWalletAddress()">Copy Address</button>
+        <button mat-menu-item (click)="disconnectWallet()">Disconnect</button>
+      </mat-menu>
+    </div>
+  }
+</mat-toolbar>
