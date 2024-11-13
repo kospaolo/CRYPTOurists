@@ -147,7 +147,7 @@ export class HomeComponent implements OnInit {
       await this.#bookingService.payBooking(booking);
       console.log('Booking accepted successfully');
     } catch (error) {
-      console.error('Error creating article:', error);
+      console.error('Error paying booking:', error);
     }
   }
 
@@ -156,7 +156,7 @@ export class HomeComponent implements OnInit {
       await this.#bookingService.refundPayment(booking);
       console.log('Booking refunded successfully');
     } catch (error) {
-      console.error('Error creating article:', error);
+      console.error('Error refunding booking:', error);
     }
   }
 }

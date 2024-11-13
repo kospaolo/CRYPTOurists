@@ -41,7 +41,7 @@ export class BookingService {
       console.log('Booking created successfully:', result);
       return result;
     } catch (error) {
-      console.error('Error creating article:', error);
+      console.error('Error creating booking:', error);
       throw error;
     }
   }
@@ -81,10 +81,10 @@ export class BookingService {
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
       const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
 
-      const gasLimit = 3000000;
+      const gasEstimate = await contract.methods['refundPayment'](booking.id).estimateGas({ from: accounts[0] });
       const result = await contract.methods
         ['refundPayment'](booking.id)
-        .send({ from: accounts[0], gas: gasLimit.toString() });
+        .send({ from: accounts[0], gas: gasEstimate.toString() });
       console.log('Booking refunded successfully:', result);
 
       return result;
