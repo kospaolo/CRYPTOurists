@@ -15,6 +15,8 @@ import { MatSortModule } from '@angular/material/sort';
 import {CurrencyPipe, DatePipe, NgClass, SlicePipe} from '@angular/common';
 import {MatPaginator} from '@angular/material/paginator';
 import {BookingService} from '../../services/booking.service';
+import {BookingDetailsModalComponent} from '../../components/booking-details-modal/booking-details-modal.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -45,6 +47,8 @@ import {BookingService} from '../../services/booking.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
+  #dialog: MatDialog = inject(MatDialog);
+
   bookings: any[] = [];
   displayedColumns: string[] = ['bookingId', 'totalAmount', 'operatorFee', 'timestamp', 'customer', 'status', 'articleCount'];
   #bookingService: BookingService = inject(BookingService);
@@ -56,6 +60,17 @@ export class HomeComponent implements OnInit {
   fetchBookings() {
     this.#bookingService.getAllBookings().then(bookings => {
       this.bookings = bookings;
+    });
+  }
+
+  openBookingModal(booking: any) {
+    const dialogRef = this.#dialog.open(BookingDetailsModalComponent, {
+      data: booking,
+      width: '800px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Booking modal closed');
     });
   }
 }

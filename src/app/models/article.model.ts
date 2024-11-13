@@ -1,13 +1,13 @@
 export class Article {
   id: number;
-  type: string;
-  address: string;
+  name: string;
   price: number
+  ownerAddress: string;
 
   constructor(id: number, type: string, address: string, price: number) {
     this.id = id;
-    this.type = type;
-    this.address = address;
+    this.name = type;
+    this.ownerAddress = address;
     this.price = price;
   }
 }

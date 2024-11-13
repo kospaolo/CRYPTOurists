@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Create New Article</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="articleForm">
+    <mat-form-field>
+      <mat-label>Article Name</mat-label>
+      <input matInput formControlName="name" required>
+      @if(articleForm.get('name')?.invalid) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field><br>
+
+    <mat-form-field>
+      <mat-label>Business Address</mat-label>
+      <input matInput formControlName="business" required>
+      @if(articleForm.get('business')?.invalid) {
+        <mat-error>Business address is required</mat-error>
+      }
+    </mat-form-field><br>
+
+    <mat-form-field>
+      <mat-label>Price</mat-label>
+      <input matInput type="number" formControlName="price" required>
+      @if(articleForm.get('price')?.invalid) {
+        <mat-error>Valid price is required</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="createArticle()" [disabled]="articleForm.invalid">Create</button>
+</mat-dialog-actions>

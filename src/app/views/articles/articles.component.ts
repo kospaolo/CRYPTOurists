@@ -11,15 +11,15 @@ import {
 } from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatIcon} from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
 import {Article} from '../../models/article.model';
 import {CurrencyPipe} from '@angular/common';
 import {MatPaginator} from '@angular/material/paginator';
-import {ARTICLES} from '../../data/articles.data';
 import {ArticleDetailsModalComponent} from '../../components/article-details-modal/article-details-modal.component';
-
+import {ArticleService} from '../../services/article.service';
+import {ToastrService} from 'ngx-toastr';
+import {CreateArticleModalComponent} from '../../components/create-article-modal/create-article-modal.component';
 
 interface Activity {
   id: number;
@@ -49,17 +49,18 @@ interface Activity {
     MatPaginator
   ],
   templateUrl: './articles.component.html',
-  styleUrl: './articles.component.scss'
+  styleUrls: ['./articles.component.scss']
 })
 export class ArticlesComponent implements AfterViewInit, OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  #dialog: MatDialog = inject(MatDialog);
-  #snackBar: MatSnackBar = inject(MatSnackBar);
+  #dialog: MatDialog              = inject(MatDialog);
+  #toastr: ToastrService          = inject(ToastrService);
+  #articleService: ArticleService = inject(ArticleService);
 
-  displayedColumns: string[] = ['id', 'type', 'address', 'price'];
-  dataSource = new MatTableDataSource<Article>([...ARTICLES]);
+  displayedColumns: string[] = ['name', 'address', 'price', 'actions'];
+  dataSource = new MatTableDataSource<Article>([]);
   isAdmin: boolean = false;
 
   constructor() {
@@ -72,8 +73,16 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
     }
   }
 
-  ngOnInit() {
-    this.dataSource.data = [...ARTICLES];
+  async ngOnInit() {
+    await this.fetchArticles();
+  }
+
+  async fetchArticles() {
+    // Get all articles and transform the raw data
+    const rawData = await this.#articleService.getAllArticles();
+    const articles = this.transformData(rawData) || [];
+    // Filter only active articles and set them to dataSource
+    this.dataSource.data = articles.filter(article => article.active);
   }
 
   ngAfterViewInit() {
@@ -81,30 +90,43 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  createActivity() {
-    console.log('Open create activity modal');
-  }
+  transformData(rawData) {
+    const ids = rawData[0];
+    const names = rawData[1];
+    const ownerAddresses = rawData[2];
+    const prices = rawData[3];
+    const activeStatuses = rawData[4];
 
-  openActivity(activity: Activity) {
-    console.log('Open activity details modal for', activity);
-  }
-
-  deleteActivity(activityId: number) {
-    this.dataSource.data = this.dataSource.data.filter(activity => activity.id !== activityId);
-
-    this.#snackBar.open('Activity deleted', 'Close', {
-      duration: 2000,
-    });
+    return ids.map((id, index) => ({
+      id: Number(id),
+      name: names[index],
+      ownerAddress: ownerAddresses[index],
+      price: Number(prices[index]),
+      active: activeStatuses[index]
+    }));
   }
 
   removeArticle(articleId: number) {
     this.dataSource.data = this.dataSource.data.filter(article => article.id !== articleId);
+    this.#toastr.success('Article deleted successfully.', 'Success');
   }
 
   openArticleModal(article: Article) {
     this.#dialog.open(ArticleDetailsModalComponent, {
       data: article,
       width: '800px'
+    });
+  }
+
+  openCreateArticleModal() {
+    const dialogRef = this.#dialog.open(CreateArticleModalComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result) {
+        await this.fetchArticles();
+      }
     });
   }
 }

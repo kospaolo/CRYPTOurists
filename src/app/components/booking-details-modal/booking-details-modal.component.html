@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Booking Details</h2>
+
+<mat-dialog-content>
+  <p><strong>Booking ID:</strong> {{ data.bookingId }}</p>
+  <p><strong>Customer:</strong> {{ data.customer }}</p>
+  <p><strong>Total Amount:</strong> {{ data.totalAmount | currency:'EUR':'symbol' }}</p>
+
+  <h3>Transactions</h3>
+  <table class="transaction-table">
+    @for(transaction of data.transactions; track transaction.id) {
+      <tr>
+        <td><strong>ID:</strong> {{ transaction.id }}</td>
+        <td><strong>Description:</strong> {{ transaction.description }}</td>
+        <td><strong>Amount:</strong> {{ transaction.amount | currency:'USD':'symbol' }}</td>
+        <td><strong>Date:</strong> {{ transaction.timestamp | date:'medium' }}</td>
+        <td>
+          <button mat-raised-button color="primary" (click)="generatePDF(transaction)">
+            Generate PDF
+          </button>
+        </td>
+      </tr>
+    }
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>

@@ -35,6 +35,10 @@
       color: #444455;
     }
 
+    td span {
+      color: #444455;
+    }
+
     .crypto-address {
       font-family: 'Courier New', monospace;
       color: #a0a0b2;
@@ -45,6 +49,10 @@
       cursor: pointer;
 
       td {
+        color: #e0e0e6;
+      }
+
+      td span {
         color: #e0e0e6;
       }
     }
@@ -81,4 +89,28 @@
       color: #a0a0b2;
     }
   }
+}
+
+.table-header {
+  font-weight: bold;
+  color: #a0a0b2;
+}
+
+.crypto-address {
+  font-family: 'Courier New', monospace;
+  color: #e0e0e6;
+}
+
+.clickable-row:hover {
+  background-color: #353544;
+  cursor: pointer;
+}
+
+.action-cell button {
+  color: #ff6666;
+}
+
+.buttons-wrapper {
+  display: flex;
+  justify-content: flex-end;
 }

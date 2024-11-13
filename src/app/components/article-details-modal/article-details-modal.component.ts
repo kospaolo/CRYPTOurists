@@ -1,43 +1,33 @@
-import {Component, Inject} from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle
+  MAT_DIALOG_DATA, MatDialogActions, MatDialogContent,
+  MatDialogRef, MatDialogTitle
 } from '@angular/material/dialog';
-import {Article} from '../../models/article.model';
-import {CurrencyPipe} from '@angular/common';
-import {MatButton} from '@angular/material/button';
-
-class ArticleModalComponent {
-}
+import { Article } from '../../models/article.model';
+import { CurrencyPipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-article-details-modal',
   standalone: true,
   imports: [
-    MatDialogTitle,
-    MatDialogContent,
+    MatButton,
     CurrencyPipe,
-    MatDialogActions,
-    MatButton
+    MatDialogContent,
+    MatDialogTitle,
+    MatDialogActions
   ],
   templateUrl: './article-details-modal.component.html',
-  styleUrl: './article-details-modal.component.scss'
+  styleUrls: ['./article-details-modal.component.scss']
 })
+
 export class ArticleDetailsModalComponent {
   constructor(
-    public dialogRef: MatDialogRef<ArticleModalComponent>,
+    public dialogRef: MatDialogRef<ArticleDetailsModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Article
   ) {}
 
   closeDialog() {
     this.dialogRef.close();
-  }
-
-  generatePDF() {
-    // Placeholder for PDF generation functionality
-    console.log("Generating PDF for", this.data);
   }
 }

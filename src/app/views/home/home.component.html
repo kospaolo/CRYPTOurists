@@ -5,37 +5,37 @@
     <!-- ID Column -->
     <ng-container matColumnDef="bookingId">
       <th mat-header-cell *matHeaderCellDef class="table-header">Booking ID</th>
-      <td mat-cell *matCellDef="let booking">{{ booking.bookingId }}</td>
+      <td mat-cell *matCellDef="let booking" (click)="openBookingModal(booking)">{{ booking.bookingId }}</td>
     </ng-container>
 
     <!-- Total Amount Column -->
     <ng-container matColumnDef="totalAmount">
       <th mat-header-cell *matHeaderCellDef class="table-header">Total Amount</th>
-      <td mat-cell *matCellDef="let booking">{{ booking.totalAmount }} CAM</td>
+      <td mat-cell *matCellDef="let booking" (click)="openBookingModal(booking)">{{ booking.totalAmount }} CAM</td>
     </ng-container>
 
     <!-- Operator Fee Column -->
     <ng-container matColumnDef="operatorFee">
       <th mat-header-cell *matHeaderCellDef class="table-header">Operator Fee</th>
-      <td mat-cell *matCellDef="let booking">{{ booking.operatorFee }} CAM</td>
+      <td mat-cell *matCellDef="let booking" (click)="openBookingModal(booking)">{{ booking.operatorFee }} CAM</td>
     </ng-container>
 
     <!-- Timestamp Column -->
     <ng-container matColumnDef="timestamp">
       <th mat-header-cell *matHeaderCellDef class="table-header">Date</th>
-      <td mat-cell *matCellDef="let booking">{{ booking.timestamp | date:'mediumDate' }}</td>
+      <td mat-cell *matCellDef="let booking" (click)="openBookingModal(booking)">{{ booking.timestamp | date:'mediumDate' }}</td>
     </ng-container>
 
     <!-- Customer Column -->
     <ng-container matColumnDef="customer">
       <th mat-header-cell *matHeaderCellDef class="table-header">Customer Address</th>
-      <td mat-cell *matCellDef="let booking">{{ booking.customer | slice:0:6 }}...{{ booking.customer | slice:-4 }}</td>
+      <td mat-cell *matCellDef="let booking" (click)="openBookingModal(booking)">{{ booking.customer | slice:0:6 }}...{{ booking.customer | slice:-4 }}</td>
     </ng-container>
 
     <!-- Status Column -->
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef class="table-header">Status</th>
-      <td mat-cell *matCellDef="let booking">
+      <td mat-cell *matCellDef="let booking" (click)="openBookingModal(booking)">
         <span [ngClass]="{'completed': booking.isCompleted, 'refunded': booking.isRefunded, 'pending': !booking.isCompleted && !booking.isRefunded}">
           {{ booking.isCompleted ? 'Completed' : booking.isRefunded ? 'Refunded' : 'Pending' }}
         </span>
@@ -45,7 +45,7 @@
     <!-- Article Count Column -->
     <ng-container matColumnDef="articleCount">
       <th mat-header-cell *matHeaderCellDef class="table-header">Articles</th>
-      <td mat-cell *matCellDef="let booking">{{ booking.articleCount }}</td>
+      <td mat-cell *matCellDef="let booking" (click)="openBookingModal(booking)">{{ booking.articleCount }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
