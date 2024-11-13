@@ -181,6 +181,11 @@
           "internalType": "uint256[]",
           "name": "_articleIds",
           "type": "uint256[]"
+        },
+        {
+          "internalType": "address",
+          "name": "_customer",
+          "type": "address"
         }
       ],
       "name": "createBooking",
@@ -402,6 +407,11 @@
           "type": "address"
         },
         {
+          "internalType": "address",
+          "name": "payer",
+          "type": "address"
+        },
+        {
           "internalType": "bool",
           "name": "isPaid",
           "type": "bool"
@@ -520,6 +530,11 @@
           "type": "address[]"
         },
         {
+          "internalType": "address[]",
+          "name": "payers",
+          "type": "address[]"
+        },
+        {
           "internalType": "bool[]",
           "name": "paidStatus",
           "type": "bool[]"
@@ -583,9 +598,31 @@
       "name": "getBookingArticles",
       "outputs": [
         {
-          "internalType": "uint256[]",
-          "name": "articleIds",
-          "type": "uint256[]"
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "business",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "isActive",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct TourismPayments.ArticleInfo[]",
+          "name": "articleInfos",
+          "type": "tuple[]"
         }
       ],
       "stateMutability": "view",

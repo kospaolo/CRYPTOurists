@@ -9,22 +9,26 @@
     <!-- Type Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Name</th>
-      <td mat-cell *matCellDef="let article" (click)="openArticleModal(article)">{{ article.name }}</td>
+      <td mat-cell *matCellDef="let article" (click)="openArticleDetailsModal(article)">{{ article.name }}</td>
     </ng-container>
 
     <!-- Owner Address Column -->
     <ng-container matColumnDef="address">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Owner Address</th>
-      <td mat-cell *matCellDef="let article" (click)="openArticleModal(article)">
-        <span class="crypto-address">{{ article.ownerAddress || 'N/A' }}</span>
+      <td mat-cell *matCellDef="let article" (click)="openArticleDetailsModal(article)">
+        @if(article.ownerAddress) {
+          <span class="crypto-address">{{ article.ownerAddress | slice:0:6 }}...{{ article.ownerAddress | slice:-4 }}</span>
+        } @else {
+          <span class="crypto-address">N/A</span>
+        }
       </td>
     </ng-container>
 
     <!-- Price Column -->
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Price</th>
-      <td mat-cell *matCellDef="let article" (click)="openArticleModal(article)">
-        {{ article.price | currency:'EUR':'symbol' }}
+      <td mat-cell *matCellDef="let article" (click)="openArticleDetailsModal(article)">
+        {{ article.price }} CAM
       </td>
     </ng-container>
 
@@ -38,11 +42,9 @@
       </td>
     </ng-container>
 
-    <!-- Header and Row Definitions -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="clickable-row"></tr>
   </table>
 
-  <!-- Paginator for Pagination -->
   <mat-paginator [pageSize]="10" showFirstLastButtons></mat-paginator>
 </div>

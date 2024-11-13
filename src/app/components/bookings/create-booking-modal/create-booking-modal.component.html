@@ -1,0 +1,32 @@
+<h2 mat-dialog-title><span>Create New Article</span></h2>
+
+<mat-dialog-content>
+  <form [formGroup]="bookingForm">
+    <mat-form-field>
+      <mat-label>Customer Address</mat-label>
+      <input matInput formControlName="customerAddress" required>
+      @if(bookingForm.get('customerAddress')?.invalid) {
+        <mat-error>Customer Address is required</mat-error>
+      }
+    </mat-form-field><br>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Select Articles</mat-label>
+      <mat-select formControlName="articles" multiple>
+        @for(article of articles; track article.id) {
+          <mat-option [value]="article.id">
+            {{ article.name }}
+          </mat-option>
+        }
+      </mat-select>
+      @if(bookingForm.get('articles')?.invalid) {
+        <mat-error>At least one article is required</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="createBooking()">Create</button>
+</mat-dialog-actions>

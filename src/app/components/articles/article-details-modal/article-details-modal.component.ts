@@ -3,7 +3,6 @@ import {
   MAT_DIALOG_DATA, MatDialogActions, MatDialogContent,
   MatDialogRef, MatDialogTitle
 } from '@angular/material/dialog';
-import { Article } from '../../models/article.model';
 import { CurrencyPipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 
@@ -24,7 +23,7 @@ import { MatButton } from '@angular/material/button';
 export class ArticleDetailsModalComponent {
   constructor(
     public dialogRef: MatDialogRef<ArticleDetailsModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Article
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   closeDialog() {

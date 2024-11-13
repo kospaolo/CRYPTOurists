@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>Booking Details</h2>
+
+<mat-dialog-content>
+  <p><strong>Booking ID:</strong> {{ data.id }}</p>
+  <p><strong>Customer Address:</strong> {{ data.customer }}</p>
+  <p><strong>Payer Address:</strong> {{ data.payer || 'N/A' }}</p>
+  @if(data.totalAmount && data.totalAmount >= 0.0001) {
+    <p><strong>Total Amount:</strong> {{ data.totalAmount | number:'1.2-2' }} CAM</p>
+  } @else {
+    <p><strong>Total Amount:</strong> {{ data.totalAmount | number:'1.18-18' }} CAM</p>
+  }
+  @if(data.operatorFee && data.operatorFee >= 0.0001) {
+    <p><strong>Operator Fee:</strong> {{ data.operatorFee | number: '1.2-2' }} CAM</p>
+  } @else {
+    <p><strong>Operator Fee:</strong> {{ data.operatorFee | number: '1.18-18' }} CAM</p>
+  }
+  <p><strong>Status:</strong>
+    <span [ngClass]="{
+      'completed': data.isCompleted,
+      'refunded': data.isRefunded,
+      'pending': !data.isCompleted && !data.isRefunded
+    }">
+      {{ data.isCompleted ? 'Completed' : data.isRefunded ? 'Refunded' : 'Pending' }}
+    </span>
+  </p>
+  <p><strong>Paid:</strong> {{ data.isPaid ? 'Yes' : 'No' }}</p><br>
+  <h5 style="color: #000">Articles:</h5>
+  @if(bookingArticles && bookingArticles.length > 0) {
+      <div *ngFor="let article of bookingArticles" class="article-details">
+        <p><strong>Article Name:</strong> {{ article.name }}</p>
+        <p><strong>Business Address:</strong> {{ article.business }}</p>
+        <p><strong>Price:</strong> {{  parseFloat(Web3.utils.fromWei(article.price, 'ether')) }} CAM</p>
+        <p><strong>Active Status:</strong> {{ article.isActive ? 'Active' : 'Inactive' }}</p>
+        <hr>
+      </div>
+  } @else {
+    <ng-template>
+      <p>No articles associated with this booking.</p>
+    </ng-template>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="generatePDF()">
+    Generate PDF
+  </button>
+  <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>

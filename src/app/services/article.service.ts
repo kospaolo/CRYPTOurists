@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
-import {Article} from '../models/article.model';
-import {ARTICLES} from '../data/articles.data';
+
 import {
-  articleContractABI,
-  articleContractAddress,
-  bookingContractABI,
-  bookingContractAddress
+  contractABI,
+  contractAddress
 } from '../utils/constants';
 import Web3 from 'web3';
 
@@ -21,25 +18,20 @@ export class ArticleService {
     this.#web3 = new Web3(this.#provider);
   }
 
-  getArticles(): Article[] {
-    return ARTICLES;
-  }
-
+  // Fetch all articles from the smart contract
   async getAllArticles(): Promise<any> {
-        try {
-          if (!this.#web3) {
-            console.error('Web3 not initialized');
-            return;
-          }
+    try {
+      if (!this.#web3) {
+        console.error('Web3 not initialized');
+        return;
+      }
+      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
 
-          const contract = new this.#web3.eth.Contract(articleContractABI, articleContractAddress);
-
-          // Call the smart contract function to get all bookings
-          return await contract.methods['getAllArticles']().call();
-        } catch (error) {
-          console.error('Error fetching articles:', error);
-          return null;
-        }
+      return await contract.methods['getAllArticles']().call();
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+      return null;
+    }
   }
 
   async getArticle(articleId: number): Promise<any> {
@@ -49,7 +41,7 @@ export class ArticleService {
         return;
       }
 
-      const contract = new this.#web3.eth.Contract(bookingContractABI, bookingContractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
       const article = await contract.methods['getBooking'](articleId).call();
 
       console.log(`Booking Details for ID ${articleId}:`, article);
@@ -70,7 +62,7 @@ export class ArticleService {
       const formattedPrice: any = this.#web3.utils.toWei(price.toString(), 'ether');
 
       // Call the smart contract's createArticle function
-      const contract = new this.#web3.eth.Contract(bookingContractABI, bookingContractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
       const result = await contract.methods['createArticle'](name, business, formattedPrice).send({
         from: account,
       });

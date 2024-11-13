@@ -13,14 +13,14 @@ import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
-import { Article } from '../../models/article.model';
-import { CurrencyPipe } from '@angular/common';
+import {CurrencyPipe, SlicePipe} from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
-import { ArticleDetailsModalComponent } from '../../components/article-details-modal/article-details-modal.component';
+import { ArticleDetailsModalComponent } from '../../components/articles/article-details-modal/article-details-modal.component';
 import { ArticleService } from '../../services/article.service';
 import { ToastrService } from 'ngx-toastr';
-import { CreateArticleModalComponent } from '../../components/create-article-modal/create-article-modal.component';
+import { CreateArticleModalComponent } from '../../components/articles/create-article-modal/create-article-modal.component';
 import {adminAddresses, businessAddresses} from '../../utils/constants';
+import {Web3} from 'web3';
 
 @Component({
   selector: 'app-articles',
@@ -42,7 +42,8 @@ import {adminAddresses, businessAddresses} from '../../utils/constants';
     MatIcon,
     MatSortModule,
     CurrencyPipe,
-    MatPaginator
+    MatPaginator,
+    SlicePipe
   ],
   templateUrl: './articles.component.html',
   styleUrls: ['./articles.component.scss']
@@ -56,10 +57,11 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
   #articleService: ArticleService = inject(ArticleService);
 
   displayedColumns: string[] = ['name', 'address', 'price', 'actions'];
-  dataSource = new MatTableDataSource<Article>([]);
-  isAdmin: boolean = false;
-  isBusiness: boolean = false;
+  dataSource = new MatTableDataSource<any>([]);
   walletAddress: string | null = sessionStorage.getItem('wallet-address');
+
+  isAdmin: boolean    = false;
+  isBusiness: boolean = false;
 
   constructor() {
     if(this.walletAddress) {
@@ -104,7 +106,7 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
       id: Number(id),
       name: names[index],
       ownerAddress: ownerAddresses[index],
-      price: Number(prices[index]),
+      price: parseFloat(Web3.utils.fromWei(prices[index], 'ether')),
       active: activeStatuses[index]
     }));
   }
@@ -114,7 +116,7 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
     this.#toastr.success('Article deleted successfully.', 'Success');
   }
 
-  openArticleModal(article: Article) {
+  openArticleDetailsModal(article: any) {
     this.#dialog.open(ArticleDetailsModalComponent, {
       data: article,
       width: '800px'
