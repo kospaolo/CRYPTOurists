@@ -76,9 +76,9 @@ export class ArticleService {
       const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
 
-      const gasLimit = 3000000;
+      const gasEstimate = await contract.methods['deleteArticle'](article.id).estimateGas({ from: accounts[0] });
       const result = await contract.methods['deleteArticle'](article.id)
-        .send({ from: accounts[0], gas: gasLimit.toString() });
+        .send({ from: accounts[0], gas: gasEstimate.toString() });
 
       console.log('Article deleted successfully:', result);
       return result;

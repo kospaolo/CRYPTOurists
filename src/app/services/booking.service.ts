@@ -62,10 +62,10 @@ export class BookingService {
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
       const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
 
-      const gasLimit = 3000000;
+      const gasEstimate = await contract.methods['completePayment'](booking.id).estimateGas({ from: accounts[0] });
       const result = await contract.methods
         ['completePayment'](booking.id)
-        .send({ from: accounts[0], gas: gasLimit.toString() });
+        .send({ from: accounts[0], gas: gasEstimate.toString() });
       console.log('Booking paid successfully:', result);
 
       return result;
