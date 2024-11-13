@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Article Details</h2>
+
+<mat-dialog-content>
+  <p><strong>ID:</strong> {{ data.id }}</p>
+  <p><strong>Type:</strong> {{ data.type }}</p>
+  <p><strong>Owner Address:</strong> {{ data.address || 'N/A' }}</p>
+  <p><strong>Price:</strong> {{ data.price | currency:'EUR':'symbol' }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Close</button>
+  <button mat-raised-button color="primary" (click)="generatePDF()">Generate PDF</button>
+</mat-dialog-actions>

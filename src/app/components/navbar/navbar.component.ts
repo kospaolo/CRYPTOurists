@@ -6,6 +6,7 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {SlicePipe} from '@angular/common';
 import {WalletService} from '../../services/wallet.service';
 import {ToastrService} from 'ngx-toastr';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -18,16 +19,28 @@ import {ToastrService} from 'ngx-toastr';
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
-    SlicePipe
+    SlicePipe,
+    RouterLink
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent implements OnInit {
-  walletConnected = false;
-  walletAddress: string | null = null;
   #walletService: WalletService = inject(WalletService);
   #toastrService: ToastrService = inject(ToastrService);
+  walletConnected = false;
+  walletAddress: string | null = null;
+  isAdmin: boolean = false;
+
+  constructor() {
+    const adminAddresses = ['0xc09CD05e58aB5Bd8862DEe3f44e6ddAd5567F091']
+    const walletAddress = sessionStorage.getItem('wallet-address');
+    if(walletAddress) {
+      this.isAdmin = adminAddresses
+        .map(address => address.toLowerCase())
+        .includes(walletAddress.toLowerCase());
+    }
+  }
 
   ngOnInit() {
     if(sessionStorage.getItem('wallet-address')) {

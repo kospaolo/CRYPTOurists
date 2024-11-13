@@ -1,6 +1,65 @@
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
 @import 'bootstrap/scss/bootstrap';
 @import 'ngx-toastr/toastr';
 @import 'ngx-toastr/toastr-bs5-alert';
+
+$primary-background: #2e2e48;
+$text-color: #e0e0e6;
+$accent-color: #42a5f5;
+
+body {
+  background-color: $primary-background;
+  color: $text-color;
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $text-color;
+  font-weight: bold;
+}
+
+a {
+  color: $accent-color;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.toast-top-center,
+.toast-bottom-center {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  max-width: 400px;
+}
+
+.ngx-toastr .toast {
+  margin: 0 auto;
+}
+
+.ngx-toastr .toast {
+  background-color: #1e1e2f; // Dark theme
+  color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  font-family: 'Roboto', sans-serif;
+}
+
+.ngx-toastr .toast-success {
+  background-color: #2e7d32;
+}
+
+.ngx-toastr .toast-error {
+  background-color: #d32f2f;
+}
+
+.toast-close-button {
+  color: #ffffff;
+}
+
+.toast-progress {
+  background-color: #42a5f5;
+}

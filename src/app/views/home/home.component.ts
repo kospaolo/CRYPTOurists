@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, ViewChild} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {
   MatCell,
@@ -7,19 +7,14 @@ import {
   MatHeaderCell,
   MatHeaderCellDef,
   MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
-  MatTable, MatTableDataSource
+  MatTable
 } from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatIcon} from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
-
-
-interface Activity {
-  id: number;
-  name: string;
-}
+import {CurrencyPipe, DatePipe, NgClass, SlicePipe} from '@angular/common';
+import {MatPaginator} from '@angular/material/paginator';
+import {BookingService} from '../../services/booking.service';
 
 @Component({
   selector: 'app-home',
@@ -39,52 +34,28 @@ interface Activity {
     MatRowDef,
     MatIconButton,
     MatIcon,
-    MatSortModule
+    MatSortModule,
+    CurrencyPipe,
+    MatPaginator,
+    NgClass,
+    DatePipe,
+    SlicePipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements AfterViewInit {
-  displayedColumns: string[] = ['id', 'name', 'actions'];
-  dataSource = new MatTableDataSource<Activity>([
-    { id: 1, name: 'Hiking' },
-    { id: 2, name: 'Kayaking' },
-    { id: 3, name: 'Biking' }
-  ]);
-  #dialog: MatDialog = inject(MatDialog);
-  #snackBar: MatSnackBar = inject(MatSnackBar);
-  @ViewChild(MatSort) sort!: MatSort;
-  isAdmin: boolean = false;
+export class HomeComponent implements OnInit {
+  bookings: any[] = [];
+  displayedColumns: string[] = ['bookingId', 'totalAmount', 'operatorFee', 'timestamp', 'customer', 'status', 'articleCount'];
+  #bookingService: BookingService = inject(BookingService);
 
-  constructor() {
-    const adminAddresses = ['0xc09CD05e58aB5Bd8862DEe3f44e6ddAd5567F091']
-    const walletAddress = sessionStorage.getItem('wallet-address');
-    console.log(walletAddress)
-    if(walletAddress) {
-      this.isAdmin = adminAddresses
-        .map(address => address.toLowerCase())
-        .includes(walletAddress.toLowerCase());
-    }
+  ngOnInit() {
+    this.fetchBookings();
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
-  createActivity() {
-    console.log('Open create activity modal');
-  }
-
-  openActivity(activity: Activity) {
-    console.log('Open activity details modal for', activity);
-  }
-
-  deleteActivity(activityId: number) {
-    this.dataSource.data = this.dataSource.data.filter(activity => activity.id !== activityId);
-
-    // Show a delete confirmation
-    this.#snackBar.open('Activity deleted', 'Close', {
-      duration: 2000,
+  fetchBookings() {
+    this.#bookingService.getAllBookings().then(bookings => {
+      this.bookings = bookings;
     });
   }
 }

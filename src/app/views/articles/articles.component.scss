@@ -9,10 +9,11 @@
   h1 {
     font-size: 24px;
     font-weight: bold;
+    color: #ffffff;
     margin-bottom: 16px;
   }
 
-  .booking-table {
+  .article-table {
     width: 100%;
     border-radius: 8px;
     overflow: hidden;
@@ -28,27 +29,56 @@
       border-bottom: 1px solid #444455;
     }
 
-    td.mat-cell {
+    td {
       padding: 16px;
       border-bottom: 1px solid #444455;
-      color: #e0e0e6;
+      color: #444455;
+    }
+
+    .crypto-address {
+      font-family: 'Courier New', monospace;
+      color: #a0a0b2;
     }
 
     .clickable-row:hover {
       background-color: #353544;
       cursor: pointer;
+
+      td {
+        color: #e0e0e6;
+      }
     }
 
-    .completed {
-      color: #42a5f5;
+    .action-cell {
+      display: flex;
+      justify-content: center;
+
+      button.mat-icon-button {
+        color: #e57373;
+        &:hover {
+          color: #ff6666;
+        }
+      }
+    }
+  }
+
+  .mat-paginator {
+    color: #a0a0b2;
+
+    .mat-paginator-container {
+      font-size: 14px;
     }
 
-    .refunded {
-      color: #e57373;
+    .mat-icon {
+      color: #a0a0b2;
     }
 
-    .pending {
-      color: #ffd54f;
+    .mat-paginator-range-label {
+      color: #ffffff;
+    }
+
+    .mat-button-base {
+      color: #a0a0b2;
     }
   }
 }

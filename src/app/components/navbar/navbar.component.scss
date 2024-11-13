@@ -1,23 +1,87 @@
+$navbar-bg-color: #1e1e2f;
+$navbar-accent-color: #42a5f5;
+$navbar-text-color: #ffffff;
+$button-hover-color: lighten($navbar-accent-color, 10%);
+
 .navbar {
   display: flex;
   align-items: center;
-  padding: 0 20px;
-}
+  justify-content: space-between;
+  padding: 0 24px;
+  background-color: $navbar-bg-color;
+  color: $navbar-text-color;
 
-.title {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
+  .title {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 
-.spacer {
-  flex: 1;
-}
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: $navbar-accent-color;
+    cursor: pointer;
+    text-decoration: none;
+    &:hover {
+      color: $button-hover-color;
+    }
+  }
 
-.wallet-info {
-  display: flex;
-  align-items: center;
-  .wallet-address {
-    margin-right: 8px;
-    font-weight: 500;
+  .spacer {
+    flex: 1;
+  }
+
+  .articles-button {
+    display: flex;
+    align-items: center;
+    color: $navbar-text-color;
+    font-weight: bold;
+    margin-right: 16px;
+    text-transform: uppercase;
+
+    mat-icon {
+      margin-right: 4px;
+      font-size: 20px;
+    }
+  }
+
+  .wallet-info {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+
+    .wallet-address {
+      margin-right: 8px;
+      font-weight: 500;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    button.mat-icon-button {
+      color: $navbar-text-color;
+
+      &:hover {
+        color: $button-hover-color;
+      }
+    }
+  }
+
+  button[mat-raised-button] {
+    color: $navbar-text-color;
+    background-color: $navbar-accent-color;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 6px 12px;
+    margin-right: 16px;
+
+    &:hover {
+      background-color: $button-hover-color;
+    }
   }
 }

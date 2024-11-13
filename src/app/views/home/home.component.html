@@ -1,32 +1,54 @@
-<div class="container mt-4">
-@if(isAdmin) {
-  <table mat-table [dataSource]="dataSource" matSort class="activity-table">
+<div class="table-container container mt-4">
+  <h1>Bookings Overview</h1>
+
+  <table mat-table [dataSource]="bookings" class="booking-table mat-elevation-z8">
     <!-- ID Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-      <td mat-cell *matCellDef="let activity">{{ activity.id }}</td>
+    <ng-container matColumnDef="bookingId">
+      <th mat-header-cell *matHeaderCellDef class="table-header">Booking ID</th>
+      <td mat-cell *matCellDef="let booking">{{ booking.bookingId }}</td>
     </ng-container>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell *matCellDef="let activity" (click)="openActivity(activity)">
-        {{ activity.name }}
+    <!-- Total Amount Column -->
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef class="table-header">Total Amount</th>
+      <td mat-cell *matCellDef="let booking">{{ booking.totalAmount }} CAM</td>
+    </ng-container>
+
+    <!-- Operator Fee Column -->
+    <ng-container matColumnDef="operatorFee">
+      <th mat-header-cell *matHeaderCellDef class="table-header">Operator Fee</th>
+      <td mat-cell *matCellDef="let booking">{{ booking.operatorFee }} CAM</td>
+    </ng-container>
+
+    <!-- Timestamp Column -->
+    <ng-container matColumnDef="timestamp">
+      <th mat-header-cell *matHeaderCellDef class="table-header">Date</th>
+      <td mat-cell *matCellDef="let booking">{{ booking.timestamp | date:'mediumDate' }}</td>
+    </ng-container>
+
+    <!-- Customer Column -->
+    <ng-container matColumnDef="customer">
+      <th mat-header-cell *matHeaderCellDef class="table-header">Customer Address</th>
+      <td mat-cell *matCellDef="let booking">{{ booking.customer | slice:0:6 }}...{{ booking.customer | slice:-4 }}</td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef class="table-header">Status</th>
+      <td mat-cell *matCellDef="let booking">
+        <span [ngClass]="{'completed': booking.isCompleted, 'refunded': booking.isRefunded, 'pending': !booking.isCompleted && !booking.isRefunded}">
+          {{ booking.isCompleted ? 'Completed' : booking.isRefunded ? 'Refunded' : 'Pending' }}
+        </span>
       </td>
     </ng-container>
 
-    <!-- Actions Column -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let activity">
-        <button mat-icon-button color="warn" (click)="deleteActivity(activity.id)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
+    <!-- Article Count Column -->
+    <ng-container matColumnDef="articleCount">
+      <th mat-header-cell *matHeaderCellDef class="table-header">Articles</th>
+      <td mat-cell *matCellDef="let booking">{{ booking.articleCount }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="clickable-row"></tr>
   </table>
-}
 </div>
