@@ -85,3 +85,14 @@ $button-hover-color: lighten($navbar-accent-color, 10%);
     }
   }
 }
+
+.menu-label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #1976d2;
+  background-color: rgba(25, 118, 210, 0.1);
+  padding: 4px 12px;
+  margin: 4px 0;
+  border-radius: 4px;
+  text-align: center;
+}

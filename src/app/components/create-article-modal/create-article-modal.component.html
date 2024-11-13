@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Create New Article</h2>
+<h2 mat-dialog-title><span>Create New Article</span></h2>
 
 <mat-dialog-content>
   <form [formGroup]="articleForm">
@@ -12,7 +12,7 @@
 
     <mat-form-field>
       <mat-label>Business Address</mat-label>
-      <input matInput formControlName="business" required>
+      <input matInput formControlName="business" required [readonly]="isBusiness">
       @if(articleForm.get('business')?.invalid) {
         <mat-error>Business address is required</mat-error>
       }
@@ -29,6 +29,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="closeDialog()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="createArticle()" [disabled]="articleForm.invalid">Create</button>
+  <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="createArticle()">Create</button>
 </mat-dialog-actions>

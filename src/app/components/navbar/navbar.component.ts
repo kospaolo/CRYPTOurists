@@ -7,6 +7,7 @@ import {SlicePipe} from '@angular/common';
 import {WalletService} from '../../services/wallet.service';
 import {ToastrService} from 'ngx-toastr';
 import {RouterLink} from '@angular/router';
+import {adminAddresses, businessAddresses} from '../../utils/constants';
 
 @Component({
   selector: 'app-navbar',
@@ -31,20 +32,19 @@ export class NavbarComponent implements OnInit {
   walletConnected = false;
   walletAddress: string | null = null;
   isAdmin: boolean = false;
+  isBusiness: boolean = false;
 
-  constructor() {
-    const adminAddresses = ['0xc09CD05e58aB5Bd8862DEe3f44e6ddAd5567F091']
+  ngOnInit() {
     const walletAddress = sessionStorage.getItem('wallet-address');
+
     if(walletAddress) {
       this.isAdmin = adminAddresses
         .map(address => address.toLowerCase())
         .includes(walletAddress.toLowerCase());
-    }
-  }
-
-  ngOnInit() {
-    if(sessionStorage.getItem('wallet-address')) {
-      this.walletAddress = sessionStorage.getItem('wallet-address');
+      const normalizedWalletAddress = walletAddress?.toLowerCase();
+      const normalizedBusinessAddresses = businessAddresses.map(address => address.toLowerCase());
+      this.isBusiness = normalizedBusinessAddresses.includes(normalizedWalletAddress);
+      this.walletAddress = walletAddress;
       this.walletConnected = true;
       this.#toastrService.success('Wallet address connected!', 'Success');
     }

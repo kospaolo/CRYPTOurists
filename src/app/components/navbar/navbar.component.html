@@ -21,6 +21,12 @@
         <mat-icon>account_balance_wallet</mat-icon>
       </button>
       <mat-menu #walletMenu="matMenu">
+        @if(isAdmin) {
+          <p class="menu-label">Admin</p>
+        }
+        @if(isBusiness) {
+          <p class="menu-label">Business</p>
+        }
         <button mat-menu-item (click)="disconnectWallet()">Disconnect</button>
       </mat-menu>
     </div>

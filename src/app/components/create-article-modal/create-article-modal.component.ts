@@ -1,13 +1,14 @@
-import {Component, inject} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
 import { bookingContractABI, bookingContractAddress } from '../../utils/constants';
-import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
-import {MatButton} from '@angular/material/button';
-import {ArticleService} from '../../services/article.service';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { ArticleService } from '../../services/article.service';
+import { businessAddresses } from '../../utils/constants';
 
 @Component({
   selector: 'app-create-article-modal',
@@ -26,8 +27,10 @@ import {ArticleService} from '../../services/article.service';
   ],
   standalone: true
 })
-export class CreateArticleModalComponent {
+export class CreateArticleModalComponent implements OnInit {
   articleForm: FormGroup;
+  isBusiness: boolean = false;
+  walletAddress: string | null = sessionStorage.getItem('wallet-address');
   #web3: Web3;
   #contract: Contract<any>;
   #articleService: ArticleService = inject(ArticleService);
@@ -38,12 +41,25 @@ export class CreateArticleModalComponent {
   ) {
     this.articleForm = this.fb.group({
       name: ['', Validators.required],
-      business: ['', Validators.required],
+      business: [{ value: '', disabled: true }, Validators.required],
       price: ['', [Validators.required, Validators.min(0)]]
     });
 
     this.#web3 = new Web3(Web3.givenProvider || 'https://columbus.camino.network/ext/bc/C/rpc');
     this.#contract = new this.#web3.eth.Contract(bookingContractABI, bookingContractAddress);
+  }
+
+  ngOnInit() {
+    const isBusiness = businessAddresses
+      .map(address => address.toLowerCase())
+      .includes(this.walletAddress?.toLowerCase() ?? "");
+    if (this.walletAddress && isBusiness) {
+      this.isBusiness = true;
+      this.articleForm.patchValue({ business: this.walletAddress });
+      this.articleForm.get('business')?.disable();
+    } else {
+      this.articleForm.get('business')?.enable();
+    }
   }
 
   async createArticle() {

@@ -1,6 +1,5 @@
 mat-dialog-content {
   padding: 20px;
-  background-color: #1e1e2f;
   color: #ffffff;
 
   p {
@@ -43,9 +42,14 @@ mat-dialog-actions {
 
 h2, mat-dialog-actions {
   margin-bottom: unset;
-  background: #1e1e2f;
 
   span {
-    color: #e0e0e6;
+    color: #1e1e2f;
+  }
+}
+
+mat-dialog-content {
+  p span {
+    color: #1e1e2f;
   }
 }

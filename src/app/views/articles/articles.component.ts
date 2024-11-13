@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, inject, OnInit, ViewChild} from '@angular/core';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import {
   MatCell,
   MatCellDef,
@@ -9,22 +9,18 @@ import {
   MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
   MatTable, MatTableDataSource
 } from '@angular/material/table';
-import {MatSort} from '@angular/material/sort';
-import {MatDialog} from '@angular/material/dialog';
-import {MatIcon} from '@angular/material/icon';
+import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
-import {Article} from '../../models/article.model';
-import {CurrencyPipe} from '@angular/common';
-import {MatPaginator} from '@angular/material/paginator';
-import {ArticleDetailsModalComponent} from '../../components/article-details-modal/article-details-modal.component';
-import {ArticleService} from '../../services/article.service';
-import {ToastrService} from 'ngx-toastr';
-import {CreateArticleModalComponent} from '../../components/create-article-modal/create-article-modal.component';
-
-interface Activity {
-  id: number;
-  name: string;
-}
+import { Article } from '../../models/article.model';
+import { CurrencyPipe } from '@angular/common';
+import { MatPaginator } from '@angular/material/paginator';
+import { ArticleDetailsModalComponent } from '../../components/article-details-modal/article-details-modal.component';
+import { ArticleService } from '../../services/article.service';
+import { ToastrService } from 'ngx-toastr';
+import { CreateArticleModalComponent } from '../../components/create-article-modal/create-article-modal.component';
+import {adminAddresses, businessAddresses} from '../../utils/constants';
 
 @Component({
   selector: 'app-articles',
@@ -62,14 +58,18 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = ['name', 'address', 'price', 'actions'];
   dataSource = new MatTableDataSource<Article>([]);
   isAdmin: boolean = false;
+  isBusiness: boolean = false;
+  walletAddress: string | null = sessionStorage.getItem('wallet-address');
 
   constructor() {
-    const adminAddresses = ['0xc09CD05e58aB5Bd8862DEe3f44e6ddAd5567F091']
-    const walletAddress = sessionStorage.getItem('wallet-address');
-    if(walletAddress) {
+    if(this.walletAddress) {
       this.isAdmin = adminAddresses
         .map(address => address.toLowerCase())
-        .includes(walletAddress.toLowerCase());
+        .includes(this.walletAddress.toLowerCase());
+
+      this.isBusiness = businessAddresses
+        .map(address => address.toLowerCase())
+        .includes(this.walletAddress.toLowerCase());
     }
   }
 
@@ -78,11 +78,14 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
   }
 
   async fetchArticles() {
-    // Get all articles and transform the raw data
     const rawData = await this.#articleService.getAllArticles();
     const articles = this.transformData(rawData) || [];
-    // Filter only active articles and set them to dataSource
-    this.dataSource.data = articles.filter(article => article.active);
+
+    if (this.isBusiness && this.walletAddress) {
+      this.dataSource.data = articles.filter(article => article.ownerAddress.toLowerCase() === this.walletAddress.toLowerCase());
+    } else {
+      this.dataSource.data = articles.filter(article => article.active);
+    }
   }
 
   ngAfterViewInit() {
