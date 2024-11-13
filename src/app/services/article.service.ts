@@ -55,31 +55,10 @@ export class ArticleService {
   async createArticle(name: any, business: any, price: any): Promise<void> {
     try {
       this.#web3 = new Web3((window as any).ethereum);
-
-      // Request the user's account (wallet address) from Web3
       const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
-      console.log("Using account:", accounts[0]);
-
-      // Convert price to Wei format
-      const formattedPrice: any = this.#web3.utils.toWei(price.toString(), 'ether');
-
-      // Log values to check for correctness
-      console.log("Article details:", { name, business, formattedPrice });
-
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
-
-      // Estimate gas and adjust if needed
-      const gasEstimate = await contract.methods['createArticle'](name, business, formattedPrice).estimateGas({ from: accounts[0] });
-      console.log("Estimated Gas:", gasEstimate);
-
-      // Test the function with call to check for any revert
-      const testCall = await contract.methods['createArticle'](name, business, formattedPrice).call({ from: accounts[0] });
-      console.log("Test call successful:", testCall);
-
       const gasLimit = 3000000;
-
-      // Send the transaction
-      const result = await contract.methods['createArticle'](name, business, formattedPrice)
+      const result = await contract.methods['createArticle'](name, business, price)
         .send({ from: accounts[0], gas: gasLimit.toString() });
 
       console.log('Article created successfully:', result);
