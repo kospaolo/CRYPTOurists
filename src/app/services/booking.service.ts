@@ -39,6 +39,7 @@ export class BookingService {
         ['createBooking'](articles, customerAddress)
         .send({ from: accounts[0] });
       console.log('Booking created successfully:', result);
+      return result;
     } catch (error) {
       console.error('Error creating article:', error);
       throw error;
@@ -59,7 +60,15 @@ export class BookingService {
     try {
       this.#web3 = new Web3((window as any).ethereum);
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
-      return await contract.methods['completePayment'](booking.id).call();
+      const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+
+      const gasLimit = 3000000;
+      const result = await contract.methods
+        ['completePayment'](booking.id)
+        .send({ from: accounts[0], gas: gasLimit.toString() });
+      console.log('Booking paid successfully:', result);
+
+      return result;
     } catch (error) {
       console.error('Error accepting booking:', error);
       throw error;
@@ -70,7 +79,15 @@ export class BookingService {
     try {
       this.#web3 = new Web3((window as any).ethereum);
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
-      return await contract.methods['refundPayment'](booking.id).call();
+      const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+
+      const gasLimit = 3000000;
+      const result = await contract.methods
+        ['refundPayment'](booking.id)
+        .send({ from: accounts[0], gas: gasLimit.toString() });
+      console.log('Booking refunded successfully:', result);
+
+      return result;
     } catch (error) {
       console.error('Error refunding booking:', error);
       throw error;

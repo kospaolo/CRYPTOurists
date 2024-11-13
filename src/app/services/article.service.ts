@@ -52,20 +52,39 @@ export class ArticleService {
     }
   }
 
-  async createArticle(name: any, business: any, price: any): Promise<void> {
+  async createArticle(name: any, business: any, price: any): Promise<any> {
     try {
       this.#web3 = new Web3((window as any).ethereum);
       const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+
       const gasLimit = 3000000;
       const result = await contract.methods['createArticle'](name, business, price)
         .send({ from: accounts[0], gas: gasLimit.toString() });
 
       console.log('Article created successfully:', result);
+      return result;
     } catch (error) {
       console.error('Error creating article:', error);
       throw error;
     }
   }
 
+  async deleteArticle(article: any): Promise<any> {
+    try {
+      this.#web3 = new Web3((window as any).ethereum);
+      const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+
+      const gasLimit = 3000000;
+      const result = await contract.methods['deleteArticle'](article.id)
+        .send({ from: accounts[0], gas: gasLimit.toString() });
+
+      console.log('Article deleted successfully:', result);
+      return result;
+    } catch (error) {
+      console.error('Error deleting article:', error);
+      throw error;
+    }
+  }
 }

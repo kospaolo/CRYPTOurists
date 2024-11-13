@@ -130,8 +130,8 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
     }));
   }
 
-  removeArticle(articleId: number) {
-    this.dataSource.data = this.dataSource.data.filter(article => article.id !== articleId);
+  async removeArticle(article: any) {
+    await this.#articleService.deleteArticle(article)
     this.#toastr.success('Article deleted successfully.', 'Success');
   }
 

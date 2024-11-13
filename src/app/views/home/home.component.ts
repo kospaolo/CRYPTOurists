@@ -127,7 +127,6 @@ export class HomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      console.log('Booking modal closed');
     });
   }
 

@@ -28,7 +28,7 @@
       <!-- Total Amount Column -->
       <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef class="table-header">Total Amount</th>
-        <td mat-cell *matCellDef="let booking">
+        <td mat-cell *matCellDef="let booking" (click)="openDetailsBookingModal(booking)">
           @if(booking.totalAmount && booking.totalAmount >= 0.0001) {
             <ng-container>
               {{ booking.totalAmount | number:'1.2-2' }} CAM
@@ -44,7 +44,7 @@
       <!-- Operator Fee Column -->
       <ng-container matColumnDef="operatorFee">
         <th mat-header-cell *matHeaderCellDef class="table-header">Operator Fee</th>
-        <td mat-cell *matCellDef="let booking">
+        <td mat-cell *matCellDef="let booking" (click)="openDetailsBookingModal(booking)">
           {{ booking.operatorFee | number:'1.18-18' }} CAM
         </td>
       </ng-container>
@@ -52,7 +52,7 @@
       <!-- Timestamp Column -->
       <ng-container matColumnDef="timestamp">
         <th mat-header-cell *matHeaderCellDef class="table-header">Date</th>
-        <td mat-cell *matCellDef="let booking">
+        <td mat-cell *matCellDef="let booking" (click)="openDetailsBookingModal(booking)">
           {{ booking.timestamp | date:'mediumDate' }}
         </td>
       </ng-container>
@@ -60,7 +60,7 @@
       <!-- Customer Address Column -->
       <ng-container matColumnDef="customer">
         <th mat-header-cell *matHeaderCellDef class="table-header">Customer Address</th>
-        <td mat-cell *matCellDef="let booking">
+        <td mat-cell *matCellDef="let booking" (click)="openDetailsBookingModal(booking)">
           {{ booking.customer | slice:0:6 }}...{{ booking.customer | slice:-4 }}
         </td>
       </ng-container>
@@ -68,7 +68,7 @@
       <!-- Status Column -->
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef class="table-header">Status</th>
-        <td mat-cell *matCellDef="let booking">
+        <td mat-cell *matCellDef="let booking" (click)="openDetailsBookingModal(booking)">
           <span [ngClass]="{
             'completed': booking.isCompleted,
             'refunded': booking.isRefunded,
