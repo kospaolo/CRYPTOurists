@@ -1,6 +1,16 @@
 <div class="table-container container mt-4">
   <h1>Articles Overview</h1>
 
+  <div class="buttons">
+    <button (click)="generateAndPreview()" class="btn pdf-button">
+      Generate & Preview PDF
+    </button>
+
+    <button (click)="generateAndUpload()" class="btn pdf-button" [disabled]="isUploading">
+      Generate & Upload to IPFS
+    </button>
+  </div>
+
   <div class="buttons-wrapper">
     <button mat-raised-button color="primary" class="mb-2" (click)="openCreateArticleModal()">Create Article</button>
   </div>

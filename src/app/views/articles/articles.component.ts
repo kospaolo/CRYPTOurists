@@ -21,6 +21,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CreateArticleModalComponent } from '../../components/articles/create-article-modal/create-article-modal.component';
 import {adminAddresses, businessAddresses} from '../../utils/constants';
 import {Web3} from 'web3';
+import {PinataService} from '../../services/pdf.service';
 
 @Component({
   selector: 'app-articles',
@@ -45,6 +46,7 @@ import {Web3} from 'web3';
     MatPaginator,
     SlicePipe
   ],
+  providers: [PinataService],
   templateUrl: './articles.component.html',
   styleUrls: ['./articles.component.scss']
 })
@@ -55,6 +57,7 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
   #dialog: MatDialog              = inject(MatDialog);
   #toastr: ToastrService          = inject(ToastrService);
   #articleService: ArticleService = inject(ArticleService);
+  #pinataService: PinataService         = inject(PinataService);
 
   displayedColumns: string[] = ['name', 'address', 'price', 'actions'];
   dataSource = new MatTableDataSource<any>([]);
@@ -62,6 +65,16 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
 
   isAdmin: boolean    = false;
   isBusiness: boolean = false;
+  selectedFile: File | null = null;
+
+  pdfData = {
+    title: 'TITL',
+    description: 'DESC',
+    date: new Date().toISOString().split('T')[0]
+  };
+  isUploading = false;
+  status = '';
+  ipfsUrl: string = '';
 
   constructor() {
     if(this.walletAddress) {
@@ -134,4 +147,32 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
       }
     });
   }
+
+  generateAndPreview() {
+    const pdfFile = this.#pinataService.generatePDF(this.pdfData);
+    const url = URL.createObjectURL(pdfFile);
+    window.open(url, '_blank');
+  }
+
+  generateAndUpload() {
+    this.isUploading = true;
+    this.status = 'Generating PDF and uploading to IPFS...';
+
+    this.#pinataService.generateAndUpload(this.pdfData).subscribe({
+      next: (response) => {
+        this.isUploading = false;
+        if (response.success) {
+          this.status = 'Upload successful!';
+          this.ipfsUrl = response.gatewayURL;
+        } else {
+          this.status = 'Error: ' + response.error;
+        }
+      },
+      error: (error) => {
+        this.isUploading = false;
+        this.status = 'Error: ' + error.message;
+      }
+    });
+  }
+
 }

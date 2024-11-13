@@ -114,3 +114,14 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.pdf-button {
+  background-color: white;
+  color: black;
+  margin-right: 10px;
+}
+
+.pdf-button:hover {
+  background-color: #f0f0f0;
+  color: black;
+}
