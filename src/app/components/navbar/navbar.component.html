@@ -21,6 +21,14 @@
         <mat-icon>rocket_launch</mat-icon>
         <span>Deploy Contract</span>
       </button>
+    } @else if (isAdmin && contractAddressExists) {
+      <button mat-raised-button color="warn" style="text-transform: unset" class="me-4" (click)="openCaminoScan()">
+        <span class="icon-container">
+          <img style="border-radius: 50%;" src="https://pbs.twimg.com/profile_images/1809501510897692672/buoc5E1F_400x400.png" alt="CaminoScan Logo" class="me-2" width="24" height="24" />
+        </span>
+        <span
+        >CaminoScan</span>
+      </button>
     }
     <div class="wallet-info">
       <span class="wallet-address" (click)="copyWalletAddress()">{{ walletAddress | slice:0:6 }}...{{ walletAddress | slice:-4 }}</span>

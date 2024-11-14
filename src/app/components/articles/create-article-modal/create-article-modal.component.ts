@@ -43,7 +43,7 @@ export class CreateArticleModalComponent implements OnInit {
   ) {
     this.articleForm = this.fb.group({
       name: ['', Validators.required],
-      business: [{ value: '', disabled: true }, Validators.required],
+      business: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0)]]
     });
 
@@ -57,10 +57,6 @@ export class CreateArticleModalComponent implements OnInit {
       .includes(this.walletAddress?.toLowerCase() ?? "");
     if (this.walletAddress && isBusiness) {
       this.isBusiness = true;
-      this.articleForm.patchValue({ business: this.walletAddress });
-      this.articleForm.get('business')?.disable();
-    } else {
-      this.articleForm.get('business')?.enable();
     }
   }
 

@@ -106,4 +106,14 @@ export class NavbarComponent implements OnInit {
   get contractAddressExists(): boolean {
     return !!localStorage.getItem('contract-address');
   }
+
+  openCaminoScan() {
+    const contractAddress = localStorage.getItem('contract-address');
+    if (contractAddress) {
+      const url = `https://columbus.caminoscan.com/address/${contractAddress}`;
+      window.open(url, '_blank');
+    } else {
+      console.error('Contract address not found in local storage.');
+    }
+  }
 }

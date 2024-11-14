@@ -105,7 +105,7 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
       return;
     }
     const rawData = await this.#articleService.getAllArticles();
-    if(!rawData || !rawData.length) {
+    if(!rawData) {
       this.dataSource.data = [];
       this.loading = false;
       return;

@@ -12,7 +12,7 @@
 
     <mat-form-field>
       <mat-label>Business Address</mat-label>
-      <input matInput formControlName="business" required [readonly]="isBusiness">
+      <input matInput formControlName="business" required>
       @if(articleForm.get('business')?.invalid) {
         <mat-error>Business address is required</mat-error>
       }

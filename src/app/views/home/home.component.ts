@@ -90,7 +90,7 @@ export class HomeComponent implements OnInit {
         return;
       }
       const rawData = await this.#bookingService.getAllBookings();
-      if(!rawData || !rawData.length) {
+      if(!rawData) {
         this.bookings = [];
         this.loading = false;
         return;
