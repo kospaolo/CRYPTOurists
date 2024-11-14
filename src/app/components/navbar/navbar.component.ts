@@ -64,7 +64,6 @@ export class NavbarComponent implements OnInit {
       this.isBusiness = normalizedBusinessAddresses.includes(normalizedWalletAddress);
       this.walletAddress = walletAddress;
       this.walletConnected = true;
-      this.#toastrService.success('Wallet address connected!', 'Success');
     }
   }
 
