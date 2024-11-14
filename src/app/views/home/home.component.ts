@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
   #bookingService: BookingService = inject(BookingService);
 
   bookings: any[] = [];
-  displayedColumns: string[] = ['id', 'amount', 'operatorFee', 'timestamp', 'customer', 'status', 'actions'];
+  displayedColumns: string[] = ['id', 'amount', 'timestamp', 'customer', 'status', 'actions'];
   walletAddress: string | null = sessionStorage.getItem('wallet-address');ž
 
   isAdmin: boolean    = false;
@@ -142,13 +142,14 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  async payBooking(booking: any): Promise<void> {
+  async confirmBooking(booking: any): Promise<void> {
     try {
-      await this.#bookingService.payBooking(booking);
+      await this.#bookingService.confirmBooking(booking);
       console.log('Booking accepted successfully');
     } catch (error) {
       console.error('Error paying booking:', error);
     }
+    window.location.reload();
   }
 
   async refundBooking(booking: any): Promise<void> {
@@ -158,5 +159,6 @@ export class HomeComponent implements OnInit {
     } catch (error) {
       console.error('Error refunding booking:', error);
     }
+    window.location.reload();
   }
 }

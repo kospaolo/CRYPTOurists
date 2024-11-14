@@ -56,7 +56,7 @@ export class BookingService {
     }
   }
 
-  async payBooking(booking: any): Promise<any> {
+  async confirmBooking(booking: any): Promise<any> {
     try {
       this.#web3 = new Web3((window as any).ethereum);
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
@@ -67,7 +67,6 @@ export class BookingService {
         ['completePayment'](booking.id)
         .send({ from: accounts[0], gas: gasEstimate.toString() });
       console.log('Booking paid successfully:', result);
-
       return result;
     } catch (error) {
       console.error('Error accepting booking:', error);
@@ -90,6 +89,16 @@ export class BookingService {
       return result;
     } catch (error) {
       console.error('Error refunding booking:', error);
+      throw error;
+    }
+  }
+
+  async getOperatorFeePercentage(): Promise<any> {
+    try {
+      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      return await contract.methods['operatorFeePercentage']().call();
+    } catch (error) {
+      console.error('Error fetching bookingArticles:', error);
       throw error;
     }
   }

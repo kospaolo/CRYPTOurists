@@ -57,9 +57,10 @@ export class ArticleService {
       this.#web3 = new Web3((window as any).ethereum);
       const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
       const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      const formattedPrice = price * 1000;
 
       const gasLimit = 3000000;
-      const result = await contract.methods['createArticle'](name, business, price)
+      const result = await contract.methods['createArticle'](name, business, formattedPrice)
         .send({ from: accounts[0], gas: gasLimit.toString() });
 
       console.log('Article created successfully:', result);

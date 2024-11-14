@@ -5,12 +5,12 @@
   <p><strong>Customer Address:</strong> {{ data.customer }}</p>
   <p><strong>Payer Address:</strong> {{ data.payer || 'N/A' }}</p>
   @if(data.totalAmount && data.totalAmount >= 0.0001) {
-    <p><strong>Total Amount:</strong> {{ data.totalAmount | number:'1.2-2' }} CAM</p>
+    <p><strong>Total Amount:</strong> {{ data.totalAmount | number:'1.8-8' }} CAM</p>
   } @else {
     <p><strong>Total Amount:</strong> {{ data.totalAmount | number:'1.18-18' }} CAM</p>
   }
   @if(data.operatorFee && data.operatorFee >= 0.0001) {
-    <p><strong>Operator Fee:</strong> {{ data.operatorFee | number: '1.2-2' }} CAM</p>
+    <p><strong>Operator Fee:</strong> {{ data.operatorFee | number: '1.8-8' }} CAM</p>
   } @else {
     <p><strong>Operator Fee:</strong> {{ data.operatorFee | number: '1.18-18' }} CAM</p>
   }

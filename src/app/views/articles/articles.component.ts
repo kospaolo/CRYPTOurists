@@ -133,6 +133,7 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
   async removeArticle(article: any) {
     await this.#articleService.deleteArticle(article)
     this.#toastr.success('Article deleted successfully.', 'Success');
+    window.location.reload();
   }
 
   openArticleDetailsModal(article: any) {
@@ -150,6 +151,7 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
     dialogRef.afterClosed().subscribe(async result => {
       if (result) {
         await this.fetchArticles();
+        window.location.reload();
       }
     });
   }
