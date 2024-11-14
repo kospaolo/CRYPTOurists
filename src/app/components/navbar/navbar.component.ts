@@ -6,7 +6,7 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {SlicePipe} from '@angular/common';
 import {WalletService} from '../../services/wallet.service';
 import {ToastrService} from 'ngx-toastr';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {adminAddresses, businessAddresses} from '../../utils/constants';
 import { DeployContractModalComponent } from '../deploy-contract-modal/deploy-contract-modal.component';
 import { ContractService } from '../../services/contract.service';
@@ -33,14 +33,22 @@ import { MatDialog } from '@angular/material/dialog';
 export class NavbarComponent implements OnInit {
   #walletService: WalletService = inject(WalletService);
   #toastrService: ToastrService = inject(ToastrService);
+  #router: Router               = inject(Router);
   #dialog = inject(MatDialog);
   #contractService = inject(ContractService);
-  walletConnected = false;
   walletAddress: string | null = null;
-  isAdmin: boolean = false;
-  isBusiness: boolean = false;
+  walletConnected = false;
+  isAdmin: boolean          = false;
+  isBusiness: boolean       = false;
+  isArticlesPage: boolean   = false;
 
   ngOnInit() {
+    this.isArticlesPage = this.#router.url === '/articles';
+
+    this.#router.events.subscribe(() => {
+      this.isArticlesPage = this.#router.url === '/articles';
+    });
+
     const walletAddress = sessionStorage.getItem('wallet-address');
 
     if(walletAddress) {

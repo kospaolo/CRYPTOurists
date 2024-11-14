@@ -1,17 +1,15 @@
-// pinata.service.ts
 import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable, from } from 'rxjs';
 import axios from 'axios';
 import { ethers } from 'ethers';
+import autoTable from 'jspdf-autotable';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PinataService {
-  private apiKey = 'YOUR_API_KEY';
-  private apiSecret = 'YOUR_API_SECRET';
   PINATA_API_KEY = 'YOUR_API_KEY';
   PINATA_SECRET_KEY = 'YOUR_API_KEY';
 
@@ -39,26 +37,109 @@ export class PinataService {
 
   generatePDF(data: any): File {
     const doc = new jsPDF();
+    let yPosition = 20;
 
-    // Add content to PDF
+    // Helper function to format values
+    const formatValue = (value: any, key?: string): string => {
+      // Handle BigInt values
+      if (typeof value === 'bigint') {
+        if (key === 'price' || key === 'totalAmount') {
+          // Convert BigInt and add CAM suffix
+          return `${String(Number(value.toString()) / 1e18)} CAM`;
+        }
+      }
+
+      // if number is 0, return as string
+      if (value === 0) {
+        return '0';
+      }
+
+      // If it's not a number or undefined, return as string
+      if (!value || typeof value !== 'number') {
+        return String(value || '');
+      }
+
+      // Special cases for number types
+      switch(key) {
+        case 'bookingId':
+          return String(value);
+        case 'operatorFee':
+          return `${String(value.toFixed(8))} CAM`
+        case 'totalAmount':
+          return `${String(value)} CAM`;
+        default:
+          return String(value);
+      }
+    };
+
+    // Add title
     doc.setFontSize(16);
-    doc.text('Generated Document', 20, 20);
+    doc.text('Booking Details', 20, yPosition);
+    yPosition += 20;
 
-    // Add data to PDF
-    doc.setFontSize(12);
-    let yPosition = 40;
+    // Create booking details table
+    const bookingDetails = Object.entries(data)
+      .filter(([key]) => key !== 'articles')
+      .map(([key, value]) => [key, formatValue(value, key)]);
 
-    // Example: Add each property from data object
-    Object.entries(data).forEach(([key, value]) => {
-      doc.text(`${key}: ${value}`, 20, yPosition);
-      yPosition += 10;
+    autoTable(doc, {
+      startY: yPosition,
+      head: [['Property', 'Value']],
+      body: bookingDetails,
+      theme: 'striped',
+      headStyles: {
+        fillColor: [66, 66, 66],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      styles: {
+        fontSize: 10,
+        cellPadding: 5
+      }
     });
 
-    // Get the PDF as blob
-    const pdfBlob = new Blob([doc.output('blob')], { type: 'application/pdf' });
+    yPosition = (doc as any).lastAutoTable.finalY + 20;
 
-    // Create a File object
-    return new File([pdfBlob], 'generated-document.pdf', { type: 'application/pdf' });
+    // Add Articles header
+    doc.setFontSize(16);
+    doc.text('Articles', 20, yPosition);
+    yPosition += 20;
+
+    // Prepare articles data
+    const articlesData = data.articles.map((article: any) => {
+      return [
+        article.articleName,
+        article.businessAddress,
+        formatValue(article.price, 'price'),
+        article.activeStatus
+      ];
+    });
+
+    // Create articles table
+    autoTable(doc, {
+      startY: yPosition,
+      head: [['Article Name', 'Business Address', 'Price', 'Status']],
+      body: articlesData,
+      theme: 'striped',
+      headStyles: {
+        fillColor: [66, 66, 66],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      styles: {
+        fontSize: 10,
+        cellPadding: 5
+      },
+      columnStyles: {
+        0: { cellWidth: 40 },
+        1: { cellWidth: 80 },
+        2: { cellWidth: 30 },
+        3: { cellWidth: 30 }
+      }
+    });
+
+    const pdfBlob = new Blob([doc.output('blob')], { type: 'application/pdf' });
+    return new File([pdfBlob], 'booking-details.pdf', { type: 'application/pdf' });
   }
 
   async uploadToPinata(file: File): Promise<any> {
