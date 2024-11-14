@@ -75,3 +75,72 @@ Current Implementation:
 ## License
 
 This project is licensed under the MIT License.
+
+## Code Documentation
+
+### Components Structure
+
+#### Navbar (`/components/navbar`)
+- Main navigation component
+- Handles wallet connection/disconnection
+- Manages contract deployment for admin users
+- Shows different navigation options based on user role (admin/business)
+
+#### Articles (`/views/articles`)
+- Displays and manages articles/services
+- Allows admins and businesses to create/edit/delete articles
+- Filters view based on user role (admins see all, businesses see only their articles)
+
+#### Home (`/views/home`)
+- Shows bookings overview
+- Different views for admins and businesses
+- Admins can see all bookings
+- Businesses only see bookings related to their articles
+
+### Services
+
+#### WalletService
+- Handles Web3 wallet integration
+- Manages wallet connection and authentication
+- Stores wallet address in session storage
+
+#### ContractService
+- Manages smart contract deployment and interaction
+- Handles contract address storage
+- Provides contract deployment functionality for admins
+
+#### BookingService
+- Manages booking operations
+- Handles booking creation, confirmation, and refunds
+- Retrieves booking details and history
+
+#### ArticleService
+- Handles CRUD operations for tourism articles
+- Manages article creation and updates
+- Handles article deletion and status changes
+
+### Smart Contract (`/contracts/TourismPayments.sol`)
+- Manages the core business logic
+- Handles payments and refunds
+- Stores article and booking data
+- Implements role-based access control
+- Manages operator fees and business payments
+
+### User Roles
+- **Admin**: Can deploy contracts, manage all articles, and oversee all bookings
+- **Business**: Can manage their own articles and handle their bookings
+
+### Key Features
+- Web3 wallet integration
+- Smart contract deployment and management
+- Role-based access control
+- IPFS integration for data storage
+- Booking management system
+- Article management system
+- CaminoScan integration for contract verification
+
+### Security
+- Role-based access control
+- Wallet authentication
+- Smart contract security measures
+- Protected admin and business functions
