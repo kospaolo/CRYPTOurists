@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod --output-hashing all",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -25,6 +25,7 @@
     "@types/qrcode": "^1.5.5",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
     "ethers": "^6.13.4",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
@@ -47,6 +48,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ngx-build-plus": "^18.0.0",
     "typescript": "~5.5.2"
   }
 }
