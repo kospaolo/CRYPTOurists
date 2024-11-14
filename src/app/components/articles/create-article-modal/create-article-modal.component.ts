@@ -3,12 +3,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
-import { contractABI, contractAddress } from '../../../utils/constants';
+import { contractABI } from '../../../utils/constants';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { ArticleService } from '../../../services/article.service';
 import { businessAddresses } from '../../../utils/constants';
+import { ContractService } from '../../../services/contract.service';
 
 @Component({
   selector: 'app-create-article-modal',
@@ -34,6 +35,7 @@ export class CreateArticleModalComponent implements OnInit {
   #web3: Web3;
   #contract: Contract<any>;
   #articleService: ArticleService = inject(ArticleService);
+  #contractService = inject(ContractService);
 
   constructor(
     private fb: FormBuilder,
@@ -46,7 +48,7 @@ export class CreateArticleModalComponent implements OnInit {
     });
 
     this.#web3 = new Web3(Web3.givenProvider || 'https://columbus.camino.network/ext/bc/C/rpc');
-    this.#contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+    this.#contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());
   }
 
   ngOnInit() {

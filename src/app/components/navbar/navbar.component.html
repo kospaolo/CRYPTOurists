@@ -15,6 +15,12 @@
         <span>Articles</span>
       </button>
     }
+    @if(isAdmin && !contractAddressExists) {
+      <button mat-raised-button color="warn" class="me-4" (click)="openDeployContractModal()">
+        <mat-icon>rocket_launch</mat-icon>
+        <span>Deploy Contract</span>
+      </button>
+    }
     <div class="wallet-info">
       <span class="wallet-address" (click)="copyWalletAddress()">{{ walletAddress | slice:0:6 }}...{{ walletAddress | slice:-4 }}</span>
       <button mat-icon-button [matMenuTriggerFor]="walletMenu">

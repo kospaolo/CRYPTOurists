@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import Web3 from 'web3';
-import { contractABI, contractAddress } from '../utils/constants';
+import { contractABI } from '../utils/constants';
+import { ContractService } from './contract.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,7 @@ import { contractABI, contractAddress } from '../utils/constants';
 export class BookingService {
   #web3: Web3 | null = null;
   #provider: any;
+  #contractService = inject(ContractService);
 
   constructor() {
     this.#provider = new Web3.providers.HttpProvider('https://columbus.camino.network/ext/bc/C/rpc');
@@ -21,7 +23,7 @@ export class BookingService {
         console.error('Web3 not initialized');
         return;
       }
-      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());
       return await contract.methods['getAllBookings']().call();
     } catch (error) {
       console.error('Error fetching bookings:', error);
@@ -32,7 +34,7 @@ export class BookingService {
   async createBooking(customerAddress: any, articles: any): Promise<any> {
     try {
       this.#web3 = new Web3((window as any).ethereum);
-      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());
       const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
 
       const result = await contract.methods
@@ -48,7 +50,7 @@ export class BookingService {
 
   async getBookingArticles(bookingId: any): Promise<any> {
     try {
-      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());
       return await contract.methods['getBookingArticles'](bookingId).call();
     } catch (error) {
       console.error('Error fetching bookingArticles:', error);
@@ -59,9 +61,7 @@ export class BookingService {
   async confirmBooking(booking: any): Promise<any> {
     try {
       this.#web3 = new Web3((window as any).ethereum);
-      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
-      const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
-
+      const contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());      const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
       const gasEstimate = await contract.methods['completePayment'](booking.id).estimateGas({ from: accounts[0] });
       const result = await contract.methods
         ['completePayment'](booking.id)
@@ -77,7 +77,7 @@ export class BookingService {
   async refundPayment(booking: any): Promise<any> {
     try {
       this.#web3 = new Web3((window as any).ethereum);
-      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());
       const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
 
       const gasEstimate = await contract.methods['refundPayment'](booking.id).estimateGas({ from: accounts[0] });
@@ -95,7 +95,7 @@ export class BookingService {
 
   async getOperatorFeePercentage(): Promise<any> {
     try {
-      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());
       return await contract.methods['operatorFeePercentage']().call();
     } catch (error) {
       console.error('Error fetching bookingArticles:', error);

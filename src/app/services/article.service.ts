@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import {
-  contractABI,
-  contractAddress
+  contractABI
 } from '../utils/constants';
 import Web3 from 'web3';
+import { ContractService } from './contract.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,8 @@ import Web3 from 'web3';
 export class ArticleService {
   #web3: Web3 | null = null;
   #provider: any;
+  #contractService = inject(ContractService);
+
 
   constructor() {
     this.#provider = new Web3.providers.HttpProvider('https://columbus.camino.network/ext/bc/C/rpc');
@@ -25,7 +27,7 @@ export class ArticleService {
         console.error('Web3 not initialized');
         return;
       }
-      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());
 
       return await contract.methods['getAllArticles']().call();
     } catch (error) {
@@ -41,7 +43,7 @@ export class ArticleService {
         return;
       }
 
-      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());
       const article = await contract.methods['getBooking'](articleId).call();
 
       console.log(`Booking Details for ID ${articleId}:`, article);
@@ -56,7 +58,7 @@ export class ArticleService {
     try {
       this.#web3 = new Web3((window as any).ethereum);
       const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
-      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());
       const formattedPrice = price * 1000;
 
       const gasLimit = 3000000;
@@ -75,7 +77,7 @@ export class ArticleService {
     try {
       this.#web3 = new Web3((window as any).ethereum);
       const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
-      const contract = new this.#web3.eth.Contract(contractABI, contractAddress);
+      const contract = new this.#web3.eth.Contract(contractABI, this.#contractService.getContractAddress());
 
       const gasEstimate = await contract.methods['deleteArticle'](article.id).estimateGas({ from: accounts[0] });
       const result = await contract.methods['deleteArticle'](article.id)

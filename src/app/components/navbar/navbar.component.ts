@@ -8,6 +8,9 @@ import {WalletService} from '../../services/wallet.service';
 import {ToastrService} from 'ngx-toastr';
 import {RouterLink} from '@angular/router';
 import {adminAddresses, businessAddresses} from '../../utils/constants';
+import { DeployContractModalComponent } from '../deploy-contract-modal/deploy-contract-modal.component';
+import { ContractService } from '../../services/contract.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-navbar',
@@ -21,7 +24,8 @@ import {adminAddresses, businessAddresses} from '../../utils/constants';
     MatMenuItem,
     MatMenuTrigger,
     SlicePipe,
-    RouterLink
+    RouterLink,
+    DeployContractModalComponent
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
@@ -29,6 +33,8 @@ import {adminAddresses, businessAddresses} from '../../utils/constants';
 export class NavbarComponent implements OnInit {
   #walletService: WalletService = inject(WalletService);
   #toastrService: ToastrService = inject(ToastrService);
+  #dialog = inject(MatDialog);
+  #contractService = inject(ContractService);
   walletConnected = false;
   walletAddress: string | null = null;
   isAdmin: boolean = false;
@@ -69,5 +75,27 @@ export class NavbarComponent implements OnInit {
   copyWalletAddress() {
     navigator.clipboard.writeText(this.walletAddress || '');
     this.#toastrService.success('Wallet address copied to clipboard!', 'Success');
+  }
+
+  async openDeployContractModal() {
+    const dialogRef = this.#dialog.open(DeployContractModalComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(async (operatorFee: number) => {
+      if (operatorFee !== undefined) {
+        try {
+          const address = await this.#contractService.deployContract(operatorFee);
+          this.#toastrService.success('Contract deployed successfully!', 'Success');
+          window.location.reload();
+        } catch (error) {
+          this.#toastrService.error('Failed to deploy contract', 'Error');
+        }
+      }
+    });
+  }
+
+  get contractAddressExists(): boolean {
+    return !!localStorage.getItem('contract-address');
   }
 }
