@@ -24,9 +24,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "customWebpackConfig": {
-              "path": "./webpack.config.js"
-            },
             "outputPath": "dist/cryptourists",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -52,15 +49,6 @@
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "customWebpackConfig": {
-                "path": "./webpack.prod.config.js"
-              },
               "budgets": [
                 {
                   "type": "initial",
