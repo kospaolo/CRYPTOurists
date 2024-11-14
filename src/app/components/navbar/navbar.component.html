@@ -17,9 +17,14 @@
       </button>
     }
     @if(isAdmin && !contractAddressExists) {
-      <button mat-raised-button color="warn" class="me-4" (click)="openDeployContractModal()">
-        <mat-icon>rocket_launch</mat-icon>
-        <span>Deploy Contract</span>
+      <button mat-raised-button color="warn" class="me-4" (click)="openDeployContractModal()" [disabled]="deployingContract">
+        @if(!deployingContract) {
+          <mat-icon>rocket_launch</mat-icon>
+          <span>Deploy Contract</span>
+        }
+        @if(deployingContract) {
+          <span>Deploying Contract...</span>
+        }
       </button>
     } @else if (isAdmin && contractAddressExists) {
       <button mat-raised-button color="warn" style="text-transform: unset" class="me-4" (click)="openCaminoScan()">

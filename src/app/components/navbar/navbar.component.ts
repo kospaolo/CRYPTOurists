@@ -3,7 +3,7 @@ import {MatToolbar} from '@angular/material/toolbar';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
-import {SlicePipe} from '@angular/common';
+import {NgIf, SlicePipe} from '@angular/common';
 import {WalletService} from '../../services/wallet.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router, RouterLink} from '@angular/router';
@@ -11,6 +11,7 @@ import {adminAddresses, businessAddresses} from '../../utils/constants';
 import { DeployContractModalComponent } from '../deploy-contract-modal/deploy-contract-modal.component';
 import { ContractService } from '../../services/contract.service';
 import { MatDialog } from '@angular/material/dialog';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-navbar',
@@ -25,7 +26,9 @@ import { MatDialog } from '@angular/material/dialog';
     MatMenuTrigger,
     SlicePipe,
     RouterLink,
-    DeployContractModalComponent
+    DeployContractModalComponent,
+    MatProgressSpinner,
+    NgIf
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
@@ -37,10 +40,11 @@ export class NavbarComponent implements OnInit {
   #dialog = inject(MatDialog);
   #contractService = inject(ContractService);
   walletAddress: string | null = null;
-  walletConnected = false;
-  isAdmin: boolean          = false;
-  isBusiness: boolean       = false;
-  isArticlesPage: boolean   = false;
+  walletConnected   = false;
+  isAdmin: boolean            = false;
+  isBusiness: boolean         = false;
+  isArticlesPage: boolean     = false;
+  deployingContract = false;
 
   ngOnInit() {
     this.isArticlesPage = this.#router.url === '/articles';
@@ -93,11 +97,14 @@ export class NavbarComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async (operatorFee: number) => {
       if (operatorFee !== undefined) {
         try {
+          this.deployingContract = true;
           const address = await this.#contractService.deployContract(operatorFee);
           this.#toastrService.success('Contract deployed successfully!', 'Success');
           window.location.reload();
         } catch (error) {
           this.#toastrService.error('Failed to deploy contract', 'Error');
+        } finally {
+          this.deployingContract = false;
         }
       }
     });
