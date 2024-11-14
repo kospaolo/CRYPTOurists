@@ -11,8 +11,9 @@ import QRCode from 'qrcode';
   providedIn: 'root'
 })
 export class PinataService {
-  PINATA_API_KEY = 'PINATA_API_KEY';
-  PINATA_SECRET_KEY = 'PINATA_SECRET_KEY';
+  // For simplicity, we've chosen to include this in the code, although normally we would avoid pushing it directly.
+  PINATA_API_KEY = 'c80659d8c2ff1a5fde2e';
+  PINATA_SECRET_KEY = '5576de97bb4d79e484752452b30e4fc9ddde02b03eb538c742f35253a2526351';
 
   private contractAddress = 'YOUR_CONTRACT_ADDRESS'; // After deployment
   private contractABI = [
