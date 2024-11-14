@@ -76,6 +76,11 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="table-header">Actions</th>
         <td mat-cell *matCellDef="let booking">
+          @if(!booking.isPaid && !booking.isCompleted && !booking.isRefunded) {
+            <button mat-raised-button color="primary" (click)="generatePaymentLink(booking)">
+              Generate Payment Link
+            </button>
+          }
           @if(booking.isPaid && !booking.isCompleted && !booking.isRefunded) {
             <button mat-icon-button color="accent" (click)="confirmBooking(booking)">
               <mat-icon>check_circle</mat-icon>
