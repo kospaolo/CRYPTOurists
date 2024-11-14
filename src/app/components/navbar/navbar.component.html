@@ -10,9 +10,10 @@
 
   @if(walletConnected) {
     @if(isAdmin || isBusiness) {
-      <button mat-raised-button color="accent" class="articles-button me-4" [routerLink]="'/articles'">
+      <button mat-raised-button color="accent" class="articles-button me-4"
+              [routerLink]="isArticlesPage ? '/home' : '/articles'">
         <mat-icon>library_books</mat-icon>
-        <span>Articles</span>
+        <span>{{ isArticlesPage ? 'Bookings' : 'Articles' }}</span>
       </button>
     }
     <div class="wallet-info">

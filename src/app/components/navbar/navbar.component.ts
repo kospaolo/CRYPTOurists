@@ -6,7 +6,7 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {SlicePipe} from '@angular/common';
 import {WalletService} from '../../services/wallet.service';
 import {ToastrService} from 'ngx-toastr';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {adminAddresses, businessAddresses} from '../../utils/constants';
 
 @Component({
@@ -29,12 +29,20 @@ import {adminAddresses, businessAddresses} from '../../utils/constants';
 export class NavbarComponent implements OnInit {
   #walletService: WalletService = inject(WalletService);
   #toastrService: ToastrService = inject(ToastrService);
-  walletConnected = false;
+  #router: Router               = inject(Router);
   walletAddress: string | null = null;
-  isAdmin: boolean = false;
-  isBusiness: boolean = false;
+  walletConnected = false;
+  isAdmin: boolean          = false;
+  isBusiness: boolean       = false;
+  isArticlesPage: boolean   = false;
 
   ngOnInit() {
+    this.isArticlesPage = this.#router.url === '/articles';
+
+    this.#router.events.subscribe(() => {
+      this.isArticlesPage = this.#router.url === '/articles';
+    });
+
     const walletAddress = sessionStorage.getItem('wallet-address');
 
     if(walletAddress) {
