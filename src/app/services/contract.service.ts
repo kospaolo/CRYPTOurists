@@ -26,13 +26,14 @@ export class ContractService {
         signer
       );
 
-      const contract = await factory.deploy(operatorFee);
+      // Multiply operator fee by 100 to handle decimals
+      const adjustedOperatorFee = operatorFee * 100;
+      const contract = await factory.deploy(adjustedOperatorFee);
       await contract.waitForDeployment();
       
       const address = await contract.getAddress();
       localStorage.setItem('contract-address', address);
       console.log("Contract address:", address);
-      
       
       return address;
     } catch (error) {
