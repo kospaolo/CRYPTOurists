@@ -56,6 +56,8 @@ export class BookingDetailsModalComponent implements OnInit {
   ipfsUrl: string = '';
   isUploading: boolean = false;
 
+  pinataUrl: string = 'https://harlequin-abundant-jaguar-168.mypinata.cloud/ipfs/';
+
   constructor(
     public dialogRef: MatDialogRef<BookingDetailsModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data
@@ -69,9 +71,25 @@ export class BookingDetailsModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  generateAndPreview() {
+  async generateAndPreview() {
+    /*this.pdfData = {
+      bookingId: this.data.id,
+      customerAddress: this.data.customer,
+      payerAddress: this.data.payer,
+      totalAmount: this.data.totalAmount,
+      operatorFee: this.data.operatorFee,
+      status: this.data.isCompleted ? 'Completed' : this.data.isRefunded ? 'Refunded' : this.data.isPaid ? 'Paid' : 'Pending',
+      paid: this.data.isPaid ? 'Paid' : 'Unpaid',
+      articles: this.bookingArticles.map(article => ({
+        articleName: article.name,
+        businessAddress: article.business,
+        price: article.price,
+        activeStatus: article.isActive ? 'Active' : 'Inactive'
+      }))
+    }*/
+
     const pdfFile = this.#pinataService.generatePDF(this.pdfData);
-    const url = URL.createObjectURL(pdfFile);
+    const url = URL.createObjectURL(await pdfFile);
     window.open(url, '_blank');
   }
 
@@ -101,7 +119,10 @@ export class BookingDetailsModalComponent implements OnInit {
         if (response.success) {
           this.status = 'Upload successful!';
           this.ipfsUrl = response.gatewayURL;
-          this.generateAndPreview();
+          const hash = response.ipfsHash;
+          const link = this.pinataUrl + hash;
+          window.open(link, '_blank');
+          //this.generateAndPreview();
         } else {
           this.status = 'Error: ' + response.error;
         }

@@ -167,33 +167,6 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
     });
   }
 
-  generateAndPreview() {
-    const pdfFile = this.#pinataService.generatePDF(this.pdfData);
-    const url = URL.createObjectURL(pdfFile);
-    window.open(url, '_blank');
-  }
-
-  generateAndUpload() {
-    this.isUploading = true;
-    this.status = 'Generating PDF and uploading to IPFS...';
-
-    this.#pinataService.generateAndUpload(this.pdfData).subscribe({
-      next: (response) => {
-        this.isUploading = false;
-        if (response.success) {
-          this.status = 'Upload successful!';
-          this.ipfsUrl = response.gatewayURL;
-        } else {
-          this.status = 'Error: ' + response.error;
-        }
-      },
-      error: (error) => {
-        this.isUploading = false;
-        this.status = 'Error: ' + error.message;
-      }
-    });
-  }
-
   get contractAddressExists(): boolean {
     return !!localStorage.getItem('contract-address');
   }
