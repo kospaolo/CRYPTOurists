@@ -79,9 +79,11 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
   ipfsUrl: string = '';
   isUploading: boolean = false;
   loading: boolean     = true;
+  connected: boolean   = false;
 
   constructor() {
     if(this.walletAddress) {
+      this.connected = true;
       this.isAdmin = adminAddresses
         .map(address => address.toLowerCase())
         .includes(this.walletAddress.toLowerCase());
@@ -98,7 +100,16 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
 
   async fetchArticles() {
     this.loading = true;
+    if(!this.contractAddressExists) {
+      this.loading = false;
+      return;
+    }
     const rawData = await this.#articleService.getAllArticles();
+    if(!rawData || !rawData.length) {
+      this.dataSource.data = [];
+      this.loading = false;
+      return;
+    }
     const articles = this.transformData(rawData) || [];
 
     if (this.isBusiness && this.walletAddress) {
@@ -183,4 +194,7 @@ export class ArticlesComponent implements AfterViewInit, OnInit {
     });
   }
 
+  get contractAddressExists(): boolean {
+    return !!localStorage.getItem('contract-address');
+  }
 }

@@ -85,7 +85,16 @@ export class HomeComponent implements OnInit {
   async fetchBookings() {
     this.loading = true;
     try {
+      if(!this.contractAddressExists) {
+        this.loading = false;
+        return;
+      }
       const rawData = await this.#bookingService.getAllBookings();
+      if(!rawData || !rawData.length) {
+        this.bookings = [];
+        this.loading = false;
+        return;
+      }
       const allBookings = this.transformData(rawData);
       this.bookings = this.isBusiness && this.walletAddress
         ? allBookings.filter(booking => booking.customer.toLowerCase() === this.walletAddress.toLowerCase() || booking.payer.toLowerCase() === this.walletAddress.toLowerCase())
@@ -165,5 +174,9 @@ export class HomeComponent implements OnInit {
   generatePaymentLink(booking: any) {
     const paymentLink = `https://cryptourist-nextjs.vercel.app/bookings/${booking.id}`;
     window.open(paymentLink, '_blank');
+  }
+
+  get contractAddressExists(): boolean {
+    return !!localStorage.getItem('contract-address');
   }
 }
