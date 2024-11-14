@@ -10,8 +10,6 @@ import autoTable from 'jspdf-autotable';
   providedIn: 'root'
 })
 export class PinataService {
-  private apiKey = 'YOUR_API_KEY';
-  private apiSecret = 'YOUR_API_SECRET';
   PINATA_API_KEY = 'YOUR_API_KEY';
   PINATA_SECRET_KEY = 'YOUR_API_KEY';
 
@@ -66,7 +64,7 @@ export class PinataService {
         case 'bookingId':
           return String(value);
         case 'operatorFee':
-          return value.toFixed(8);
+          return `${String(value.toFixed(8))} CAM`
         case 'totalAmount':
           return `${String(value)} CAM`;
         default:

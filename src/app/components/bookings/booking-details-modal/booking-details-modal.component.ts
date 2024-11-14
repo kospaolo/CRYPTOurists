@@ -6,7 +6,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from '@angular/material/dialog';
-import {CurrencyPipe, DatePipe, DecimalPipe, NgClass, NgForOf} from '@angular/common';
+import {CurrencyPipe, DatePipe, DecimalPipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {MatButton} from '@angular/material/button';
 import {BookingService} from '../../../services/booking.service';
 import {Web3} from 'web3';
@@ -24,7 +24,8 @@ import {PinataService} from '../../../services/pdf.service';
     MatDialogActions,
     NgClass,
     DecimalPipe,
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   templateUrl: './booking-details-modal.component.html',
   styleUrl: './booking-details-modal.component.scss'
