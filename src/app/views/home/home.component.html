@@ -7,6 +7,8 @@
   <ng-template #dataTable>
     @if(!connected) {
     <h1>Connect the wallet to see the bookings.</h1>
+  } @else if(!contractAddressExists) {
+      <h1>Contract address not found. Please deploy the contract.</h1>
   } @else if(!isAdmin && !isBusiness) {
     <h1>Sorry, you don't have access to the data</h1>
   } @else {
