@@ -161,4 +161,9 @@ export class HomeComponent implements OnInit {
     }
     window.location.reload();
   }
+
+  generatePaymentLink(booking: any) {
+    const paymentLink = `https://cryptourist-nextjs.vercel.app/bookings/${booking.id}`;
+    window.open(paymentLink, '_blank');
+  }
 }
