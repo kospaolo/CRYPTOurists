@@ -8,6 +8,6 @@ export const businessAddresses = [
 ];
 
 export const adminAddresses = [
-  '0xc09CD05e58aB5Bd8862DEe3f44e6ddAd5567F091',
+  '0xcfB2F44D41ac8c890D39184d504216eB2E9FB6cB',
   '0x94e2807d6a58af3d4891ece0e96caa0d6e8310bd'
 ];
