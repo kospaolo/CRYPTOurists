@@ -18,9 +18,10 @@
     <span [ngClass]="{
       'completed': data.isCompleted,
       'refunded': data.isRefunded,
-      'pending': !data.isCompleted && !data.isRefunded
+      'paid': data.isPaid,
+      'pending': !data.isPaid && !data.isCompleted && !data.isRefunded
     }">
-      {{ data.isCompleted ? 'Completed' : data.isRefunded ? 'Refunded' : 'Pending' }}
+      {{ data.isCompleted ? 'Completed' : data.isRefunded ? 'Refunded' : data.isPaid ? 'Paid' : 'Pending' }}
     </span>
   </p>
   <p><strong>Paid:</strong> {{ data.isPaid ? 'Yes' : 'No' }}</p><br>
