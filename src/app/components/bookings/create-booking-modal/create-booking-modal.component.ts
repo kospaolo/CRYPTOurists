@@ -47,7 +47,7 @@ export class CreateBookingModalComponent implements OnInit {
 
   async ngOnInit() {
     const rawData = await this.#articleService.getAllArticles();
-    this.articles = this.transformData(rawData) || [];
+    this.articles = this.transformData(rawData).filter(article => article.active) || [];
   }
 
   transformData(rawData) {
